@@ -1,0 +1,20 @@
+# This file managed by Puppet
+cert = <%= @cert_real %>
+
+setuid = <%= @setuid_real %> 
+setgid = <%= @setgid_real %>
+pid = <%= @pid %>
+
+debug = <%= @debug %>
+
+output = <%= @output %>
+
+timeoutidle = <%= @timeoutidle %> 
+options = <%= @options %>
+
+<%- @services.each do |name,s| -%>
+[<%= name %>]
+  <%- s.each do |opt,val| -%>
+<%= opt %>=<%= val %>
+  <%- end -%>
+<%- end -%>
