@@ -24,14 +24,14 @@
 #   [facility.]level
 #
 define stunnel::tun (
-  $services,
+  $accept,
+  $connect,
   $cert = 'UNSET',
   $options = '',
-  $setgid = 'UNSET',
-  $setuid = 'UNSET',
   $template = 'stunnel/tun.erb',
   $timeoutidle = '60',
   $debug = '0',
+  $install_service = true,
 ) {
   include stunnel
   include stunnel::data
@@ -42,24 +42,35 @@ define stunnel::tun (
   }
   validate_absolute_path( $cert_real )
 
-  $pid = "${stunnel::data::pid_dir}/${name}.pid"
+  $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
   $output = "${stunnel::data::log_dir}/${name}.log"
-  $setuid_real = $setuid ? {
-    'UNSET' => $stunnel::data::setuid,
-    default => $setuid,
-  }
 
-  $setgid_real = $setgid ? {
-    'UNSET' => $stunnel::data::setgid,
-    default => $setgid,
-  }
-
-  file { "${stunnel::data::conf_d_dir}/${name}.conf":
+  $config_file = "${stunnel::data::conf_d_dir}/${name}.conf"
+  file { $config_file:
     ensure  => 'present',
     owner   => 'root',
     group   => 'root',
     mode    => '0444',
     content => template('stunnel/tun.erb'),
+  }
+
+  # setup our init script / service
+  $initscript_ensure = $install_service ? {
+    true    => 'present',
+    default => 'absent',
+  }
+  file { "/etc/init.d/stunnel-${name}":
+    ensure  => $initscript_ensure,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0550',
+    content => template('stunnel/stunnel.init.erb'),
+  }
+  if $install_service {
+    service { "stunnel-${name}":
+      enable  => true,
+      require => File["/etc/init.d/stunnel-${name}"],
+    }
   }
 
   # make sure we process our stunnel class first
