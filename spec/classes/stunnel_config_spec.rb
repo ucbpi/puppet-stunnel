@@ -12,6 +12,7 @@ describe 'stunnel::config' do
       }
       should contain_file('/etc/stunnel').with(params)
       should contain_file('/etc/stunnel/conf.d').with(params)
+      should contain_file('/var/log/stunnel').with(params)
     end
   end
 end

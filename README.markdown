@@ -1,48 +1,50 @@
 # stunnel Module #
 
-# Usage #
-
-This module initially intended for use with xinetd.  While these examples make
-use of arusso-xinetd, it is not a requirement, hence the lack of the explicit
-dependency in the ModuleFile.
+This module is still in development.  While usage is encouraged, be forewarned
+that the interface is unstable into version 1.0.0, or unless otherwise noted.
 
 ## Examples ##
 
-Setup an stunnel for 0.0.0.0:993 to localhost:994.  Because stunnel wants a cert
-file with the private key, and intermediate and signed cert in a single file, we
-have the stunnel::cert type to combine the certs together for you.  Certs are
-combined in the order they appear in the array.  Certs are stored in
-/etc/stunnel/certs/ by default, and have permissions 600 and owned by root.
+Setup a tunnel, accepting connections on `:993` and sending them to
+`localhost:143`, using a pre-built cert at `/etc/certs/stunnel-imaps.pem`:
 
     include stunnel
-    $imaps_service = {
-      'accept'  => '0.0.0.0:993',
-      'connect' => '127.0.0.1:994',
-    }
     stunnel::tun { 'imaps':
-      services => { 'imaps' => $imaps_service },
+      accept  => '993',
+      connect => 'localhost:143',
+      options => 'NO_SSLv2',
+      cert    => '/etc/certs/stunnel-imaps.pem',
+    }
+  
+stunnel is picky about the certs.  You can find more information about it 
+[here](https://www.stunnel.org/static/stunnel.html) in the `CERTIFICATES`
+section.
+
+If you don't want to mess with rebuilding your cert each time the certs you base
+it off of get updated, you can use the `stunnel::cert` class to your benefit:
+
+    stunnel::cert { 'imaps':
+      components => [ '/etc/pki/tls/private/private.key',
+                      '/etc/pki/tls/certs/public.crt' ],
+    }
+
+This will generate a cert `/etc/stunnel/certs/imaps.pem` that is the
+concatenation of the $components array provided, with a single line in between
+each certificate to make stunnel happiest.
+
+Since by default, the `cert` parameter looks for certs that match the service
+name in the `/etc/stunnel/certs/` directory, we can omit the `cert` parameter
+if we use the `stunnel::cert` class.  Here's a full example:
+
+    include stunnel
+    stunnel::tun { 'imaps':
+      accept   => '993',
+      connect  => '143',
       options  => 'NO_SSLv2',
     }
 
     stunnel::cert { 'imaps':
       components => [ '/etc/pki/tls/certs/public-cert.crt', '/etc/pki/tls/private/private.key' ],
-    }
-
-    include xinetd
-    xinetd_imaps = {
-      'disable'        => 'no',
-      'type'           => 'unlisted',
-      'port'           => '993',
-      'socket_type'    => 'stream',
-      'wait'           => 'no',
-      'user'           => 'root',
-      'protocol'       => 'tcp',
-      'server'         => '/usr/bin/stunnel',
-      'server_args'    => '/etc/stunnel/conf.d/imaps.conf',
-    }
-    xinetd::service_entry { 'stunnel-imaps':
-      ensure  => 'present',
-      options => $xinetd_imaps,
     }
 
 License
