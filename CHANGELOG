@@ -1,5 +1,7 @@
 2013-08-16 Aaron Russo <arusso@berkeley.edu> - 0.0.2
 * Added initscript for each tunnel
+* moved away from multi-services per tunnel
+* moar examples!
 
 2013-08-12 Aaron Russo <arusso@berkeley.edu> - 0.0.1
 * Initial Release
