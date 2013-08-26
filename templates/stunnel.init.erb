@@ -22,10 +22,10 @@
 
 PID_FILE=<%= @pid %>
 LOCK_FILE=/var/lock/subsys/stunnel-<%= @name %>
-PROG=stunnel
+PROG=<%= @prog %>
 
 SVC_NAME=stunnel-<%= @name %>
-SVC_BIN=/usr/bin/stunnel
+SVC_BIN=<%= @svc_bin %>
 SVC_CONF=<%= @config_file %>
 
 STARTUP_WAIT=2
