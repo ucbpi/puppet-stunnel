@@ -44,6 +44,8 @@ define stunnel::tun (
 
   $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
   $output = "${stunnel::data::log_dir}/${name}.log"
+  $prog = "${stunnel::data::bin_name}"
+  $svc_bin = "${stunnel::data::bin_path}/${stunnel::data::bin_name}"
 
   $config_file = "${stunnel::data::conf_d_dir}/${name}.conf"
   file { $config_file:
