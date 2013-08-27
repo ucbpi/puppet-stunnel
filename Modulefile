@@ -1,5 +1,5 @@
 name 'arusso-stunnel'
-version '0.0.1'
+version '0.0.2'
 summary "stunnel management"
 description "stunnel management module with emphasis on working on redhat hosts
  behind an xinetd service"

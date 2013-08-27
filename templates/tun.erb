@@ -1,8 +1,8 @@
 # This file managed by Puppet
 cert = <%= @cert_real %>
 
-setuid = <%= @setuid_real %> 
-setgid = <%= @setgid_real %>
+setuid = root
+setgid = root
 pid = <%= @pid %>
 
 debug = <%= @debug %>
@@ -12,9 +12,10 @@ output = <%= @output %>
 timeoutidle = <%= @timeoutidle %> 
 options = <%= @options %>
 
-<%- @services.each do |name,s| -%>
-[<%= name %>]
-  <%- s.each do |opt,val| -%>
-<%= opt %>=<%= val %>
-  <%- end -%>
-<%- end -%>
+[<%= @name %>]
+<% if @accept -%>
+  accept=<%= @accept %>
+<% end -%>
+<% if @connect -%>
+  connect=<%= @connect %>
+<% end -%>

@@ -1,0 +1,170 @@
+#!/bin/bash
+#
+# /etc/rc.d/init.d/stunnel-<%= @name %>
+#
+# Service script for the stunnel '<%= @name %>' tunnel
+# 
+# Author:    Aaron Russo <arusso@berkeley.edu>
+# Date:      16-Aug-2013
+# Version:   1.0.0
+# License:   MIT
+# Copyright: Regents of the University of California
+# 
+# This file is bundled with the arusso-stunnel module for puppet, and assumes it
+# is being used by that module.
+# 
+# chkconfig: 345 90 10
+# description: starts the <%= @name %> stunnel
+# pidfile: /var/run/stunnel-<%= @name %>.pid
+
+# Source lsb library
+. /lib/lsb/init-functions
+
+PID_FILE=<%= @pid %>
+LOCK_FILE=/var/lock/subsys/stunnel-<%= @name %>
+PROG=<%= @prog %>
+
+SVC_NAME=stunnel-<%= @name %>
+SVC_BIN=<%= @svc_bin %>
+SVC_CONF=<%= @config_file %>
+
+STARTUP_WAIT=2
+SHUTDOWN_WAIT=2
+
+# returns the pid.  if 0 is returned, no pid exists
+pid() {
+  PID=0
+  if [ -f $PID_FILE ]; then read PID < $PID_FILE; fi
+  echo $PID
+}
+
+locked() {
+  if [ -f $LOCK_FILE ]; then echo 1; return; fi
+  echo 0;
+}
+
+pid_bin() {
+  pid_bin=""
+  if [ $1 -eq 0 ]; then echo ""; return; fi
+  pid_bin=$(ps --pid $1 | grep $1 |  awk '{ print $4 }')
+  echo $pid_bin
+}
+
+start() {
+  PID=$(pid)
+  LOCKED=$(locked)
+  PID_BIN=$(pid_bin $PID)
+ 
+  if [ $PID -ne 0 ] && [ $LOCKED -eq 1 ] && [ "$PID_BIN" == "$PROG" ]; then
+    echo
+    exit 0
+  elif [ $PID -eq 0 ] && [ $LOCKED -eq 1 ]; then
+    rm -f $LOCK_FILE
+  elif [ $PID -ne 0 ] && \
+       [ $LOCKED -eq 1 ] && \
+       [ "$PID_BIN" != "$PROG" ]; then
+       # oops, pid files exists, subsys is locked AND we've got the wrong binary
+       # running
+    # this must mean things went down badly at some point.  we'll clean it up!
+    rm -f $PID_FILE $LOCK_FILE
+  fi
+  $SVC_BIN $SVC_CONF
+  # wait for it to load up
+  count=0
+  until [ -f $PID_FILE ] || [ "$count" -gt "$STARTUP_WAIT" ]; do
+    sleep 1
+    let count="${count}+1"
+  done
+  PID=$(pid)
+  PID_BIN=$(pid_bin $PID)
+  if [ $PID -gt 0 ] && [ "${PID_BIN}" == "${PROG}" ]; then
+    log_success_msg
+  else
+    log_failure_msg
+    exit 1
+  fi
+}
+
+stop() {
+  PID=$(pid)
+  LOCKED=$(locked)
+  PID_BIN=$(pid_bin $PID)
+  
+  if [ $PID -ne 0 ] && [ $LOCKED -eq 1 ] && [ "$PID_BIN" == "$PROG" ]; then
+    # shutdown the service
+    kill -15 $PID
+    count=0
+    until [ ! -f $PID_FILE ] || [ "$count" -gt "$SHUTDOWN_WAIT" ]; do
+      sleep 1
+      let count="${count}+1"
+    done
+    PID=$(pid)
+    if [ $PID -ne 0 ]; then kill -9 $PID; fi
+    PID=$(pid)
+    if [ $PID -eq 0 ]; then
+      log_success_msg
+    else
+      log_failure_msg
+    fi
+  else
+    log_failure_msg
+  fi
+
+}
+
+status() {
+  PID=$(pid)
+  LOCKED=$(locked)
+  PID_BIN=$(pid_bin $PID)
+
+  if [ $PID -ne 0 ] && [ $LOCKED -eq 1 ] && [ "$PID_BIN" == "$PROG" ]; then
+    echo "service ${SVC_NAME} (pid $PID) is running..."
+    exit 0
+  elif [ $PID -ne 0 ] && [ "$PID_BIN" != "$PROG" ]; then
+    # mismatch between pid file and running process
+    # that means it died but something else is now running as $PID
+    echo "$SVC_NAME dead but pid file exists!"
+    exit 1
+  elif [ $PID -eq 0 ] && [ $LOCKED -eq 1 ]; then
+    echo "$SVC_NAME dead but subsys locked!" 
+    exit 2
+  fi
+  echo "$SVC_NAME is not running..."
+  exit 3
+}
+
+case "$1" in
+  start)
+    echo -n "Starting $SVC_NAME service: "
+    start
+    touch $LOCK_FILE
+  ;;
+  stop)
+    echo -n "Stopping $SVC_NAME service: "
+    stop
+    rm -f $LOCK_FILE
+  ;;
+  status)
+    status
+  ;;
+  restart)
+    # we want to call the script itself, not the functions
+    $0 stop
+    $0 start
+  ;;
+  cond-restart)
+     PID=$(pid)
+     PID_BIN=$(pid_bin $PID)
+     LOCKED=$(locked)
+     if [ $PID -ne 0 ] && [ $LOCKED -eq 1 ] && [ "$PID_BIN" == "$PROG" ]; then
+       # we want to call this script again from the start, and not just the
+       # functions
+       $0 stop
+       $0 start
+     fi 
+  ;;
+  *)
+  echo "Usage: $SVC_NAME {start|stop|status|restart}"
+    exit 1
+  ;;
+esac
