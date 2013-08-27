@@ -1,7 +1,7 @@
 # stunnel Module #
 
-This module is still in development.  While usage is encouraged, be forewarned
-that the interface is unstable into version 1.0.0, or unless otherwise noted.
+This is an stunnel module that provides support for multiple tunnels, each with
+their own initscript.
 
 ## Examples ##
 
@@ -44,7 +44,8 @@ if we use the `stunnel::cert` class.  Here's a full example:
     }
 
     stunnel::cert { 'imaps':
-      components => [ '/etc/pki/tls/certs/public-cert.crt', '/etc/pki/tls/private/private.key' ],
+      components => [ '/etc/pki/tls/certs/public-cert.crt',
+                      '/etc/pki/tls/private/private.key' ],
     }
 
 License
@@ -57,6 +58,13 @@ Copyright
 
 Copyright &copy; 2013 The Regents of the University of California
 
+
+Contributors:
+-------------
+
+**Yann Vigara**
+
+ * Debian/Ubuntu support
 
 Contact
 -------

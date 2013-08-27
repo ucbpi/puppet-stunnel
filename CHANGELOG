@@ -1,3 +1,6 @@
+2013-08-26 Aaron Russo <arusso@berkeley.edu> _ 1.0.0
+* Debian/Ubuntu support (yvigara)
+
 2013-08-16 Aaron Russo <arusso@berkeley.edu> - 0.0.2
 * Added initscript for each tunnel
 * moved away from multi-services per tunnel
