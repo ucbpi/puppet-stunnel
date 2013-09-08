@@ -9,12 +9,31 @@ define stunnel::cert (
   include stunnel::data
 
   $comps = join( $components, ' -c ' )
-  $out = "${stunnel::data::cert_dir}/${title}.pem"
+  $out = "${stunnel::data::cert_dir}/${name}.pem"
   $bin = '/usr/local/bin/stunnel-combine-certs'
 
-  exec { "stunnel-generate-cert-${title}":
+  file { $stunnel::data::cert_dir:
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0555',
+  }
+
+  file { '/usr/local/bin/stunnel-combine-certs':
+    ensure => 'present',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0555',
+    source => 'puppet:///modules/stunnel/stunnel-combine-certs.rb',
+  }
+
+  exec { "stunnel-generate-cert-${name}":
     path    => [ '/usr/bin', '/bin' ],
     command => "${bin} -c ${comps} -o ${out} -f",
     onlyif  => "${bin} -c ${comps} -o ${out} -t; test $? -eq 1",
+    require => [
+      File['/usr/local/bin/stunnel-combine-certs'],
+      File[$stunnel::data::cert_dir]
+    ]
   }
 }
