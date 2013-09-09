@@ -1,3 +1,8 @@
 class stunnel::install {
-  package { 'stunnel': ensure => installed }
+  include stunnel::data
+
+  package { 'stunnel':
+    ensure => installed,
+    name   => $stunnel::data::package
+  }
 }
