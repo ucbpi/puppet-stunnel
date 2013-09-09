@@ -70,8 +70,9 @@ define stunnel::tun (
   }
   if $install_service {
     service { "stunnel-${name}":
-      enable  => true,
-      require => File["/etc/init.d/stunnel-${name}"],
+      enable    => true,
+      require   => File["/etc/init.d/stunnel-${name}"],
+      subscribe => $config
     }
   }
 }
