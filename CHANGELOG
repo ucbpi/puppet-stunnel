@@ -1,3 +1,7 @@
+2014-03-17 Aaron Russo <arusso@berkeley.edu> - 1.0.1
+* Ensure lsb is installed
+* bugfix: we weren't installing the right package on Debian systems
+
 2013-08-26 Aaron Russo <arusso@berkeley.edu> - 1.0.0
 * Debian/Ubuntu support (yvigara)
 
