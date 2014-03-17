@@ -1,3 +1,11 @@
+# == Class: stunnel::install
+#
+# Installs the required packages for stunnel and this module
+#
 class stunnel::install {
-  package { 'stunnel': ensure => installed }
+  ensure_packages( [ 'stunnel' ] )
+
+  if $::osfamily == 'RedHat' {
+    ensure_packages( [ 'redhat-lsb' ] )
+  }
 }
