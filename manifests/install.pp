@@ -3,9 +3,7 @@
 # Installs the required packages for stunnel and this module
 #
 class stunnel::install {
-  ensure_packages( [ 'stunnel' ] )
+  require stunnel::data
 
-  if $::osfamily == 'RedHat' {
-    ensure_packages( [ 'redhat-lsb' ] )
-  }
+  ensure_packages( $stunnel::data::package )
 }

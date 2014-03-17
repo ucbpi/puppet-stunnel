@@ -1,7 +1,11 @@
+# Class: stunnel::data
+#
+# Poorly named 'params' class, this class handles all the os-specific logic.
+#
 class stunnel::data {
   case $::osfamily {
     /RedHat/: {
-      $package = 'stunnel'
+      $package = [ 'stunnel', 'redhat-lsb' ]
       $service = 'stunnel'
       $bin_name = 'stunnel'
       $bin_path = '/usr/bin'
@@ -14,7 +18,7 @@ class stunnel::data {
       $setuid = 'root'
     }
     /Debian|Ubuntu/: {
-      $package = 'stunnel4'
+      $package = [ 'stunnel4', 'lsb' ]
       $service = 'stunnel'
       $bin_name = 'stunnel4'
       $bin_path = '/usr/bin'
