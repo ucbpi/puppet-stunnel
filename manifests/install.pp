@@ -1,3 +1,9 @@
+# == Class: stunnel::install
+#
+# Installs the required packages for stunnel and this module
+#
 class stunnel::install {
-  package { 'stunnel': ensure => installed }
+  require stunnel::data
+
+  ensure_packages( $stunnel::data::package )
 }

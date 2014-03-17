@@ -1,0 +1,10 @@
+fixtures:
+  symlinks:
+    "stunnel": "#{source_dir}"
+  repositories:
+    "oski":
+      repo: "git://github.com/arusso/puppet-oski"
+      ref: "0.0.7"
+    "stdlib":
+      repo: "git://github.com/puppetlabs/puppetlabs-stdlib.git"
+      ref: "2.6.0"
