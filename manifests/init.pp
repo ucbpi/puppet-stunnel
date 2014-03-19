@@ -11,6 +11,6 @@ class stunnel {
     source => 'puppet:///modules/stunnel/stunnel-combine-certs.rb',
   }
 
-  class { 'stunnel::install': } ->
-    class { 'stunnel::config': }
+  include stunnel::install, stunnel::config
+  Class['Stunnel::Install'] -> Class['Stunnel::Config']
 }

@@ -33,7 +33,7 @@ define stunnel::tun (
   $debug = '0',
   $install_service = true,
 ) {
-  include stunnel
+  require stunnel
   include stunnel::data
 
   $cert_real = $cert ? {
@@ -44,7 +44,7 @@ define stunnel::tun (
 
   $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
   $output = "${stunnel::data::log_dir}/${name}.log"
-  $prog = "${stunnel::data::bin_name}"
+  $prog = $stunnel::data::bin_name
   $svc_bin = "${stunnel::data::bin_path}/${stunnel::data::bin_name}"
 
   $config_file = "${stunnel::data::conf_d_dir}/${name}.conf"
@@ -70,11 +70,9 @@ define stunnel::tun (
   }
   if $install_service {
     service { "stunnel-${name}":
-      enable  => true,
-      require => File["/etc/init.d/stunnel-${name}"],
+      enable    => true,
+      require   => File["/etc/init.d/stunnel-${name}"],
+      subscribe => $config
     }
   }
-
-  # make sure we process our stunnel class first
-  Class['stunnel'] -> Class['stunnel::data'] -> Stunnel::Tun[$title]
 }
