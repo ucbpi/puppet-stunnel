@@ -1,5 +1,7 @@
 # stunnel Module #
 
+[![Build Status](https://travis-ci.org/arusso/puppet-stunnel.png?branch=master)](https://travis-ci.org/arusso/puppet-stunnel)
+
 This is an stunnel module that provides support for multiple tunnels, each with
 their own initscript.
 
