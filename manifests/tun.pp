@@ -72,7 +72,7 @@ define stunnel::tun (
     service { "stunnel-${name}":
       enable    => true,
       require   => File["/etc/init.d/stunnel-${name}"],
-      subscribe => $config
+      subscribe => File[$config_file],
     }
   }
 }
