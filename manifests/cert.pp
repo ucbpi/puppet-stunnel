@@ -12,19 +12,23 @@ define stunnel::cert (
   $out = "${stunnel::data::cert_dir}/${name}.pem"
   $bin = '/usr/local/bin/stunnel-combine-certs'
 
-  file { $stunnel::data::cert_dir:
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0555',
+  if ! defined ( File[$stunnel::data::cert_dir] ) {
+    file { $stunnel::data::cert_dir:
+      ensure => directory,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0555',
+    }
   }
 
-  file { '/usr/local/bin/stunnel-combine-certs':
-    ensure => 'present',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0555',
-    source => 'puppet:///modules/stunnel/stunnel-combine-certs.rb',
+  if ! defined ( File['/usr/local/bin/stunnel-combine-certs'] ) {
+    file { '/usr/local/bin/stunnel-combine-certs':
+      ensure => 'present',
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0555',
+      source => 'puppet:///modules/stunnel/stunnel-combine-certs.rb',
+    }
   }
 
   exec { "stunnel-generate-cert-${name}":
