@@ -10,6 +10,9 @@
 # [*cert*]
 #   Certificate to use for this tunnel
 #
+# [*client*]
+#   Whether this tunnel should be setup in client mode.
+#
 # [*options*]
 #   Options to pass to openssl.  To disable SSLv2 on your tunnel, you could pass
 #   "NO_SSLv2" as an option.
@@ -27,6 +30,7 @@
 define stunnel::tun (
   $accept,
   $connect,
+  $client = false,
   $cert = 'UNSET',
   $options = '',
   $template = 'stunnel/tun.erb',
