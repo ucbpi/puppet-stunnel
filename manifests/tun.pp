@@ -4,7 +4,8 @@
 #
 # === Parameters
 #
-# [*services*]
+# [*accept*]
+#   accept connections on the specified address.
 #
 # [*cert*]
 #   Certificate to use for this tunnel
@@ -41,6 +42,7 @@ define stunnel::tun (
     default => $cert,
   }
   validate_absolute_path( $cert_real )
+  validate_bool( $client )
 
   $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
   $output = "${stunnel::data::log_dir}/${name}.log"
