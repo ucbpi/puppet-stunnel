@@ -17,7 +17,7 @@ class stunnel::data {
       $setgid = 'root'
       $setuid = 'root'
     }
-    /Debian|Ubuntu/: {
+    /Debian/: {
       $package = [ 'stunnel4', 'lsb' ]
       $service = 'stunnel'
       $bin_name = 'stunnel4'
