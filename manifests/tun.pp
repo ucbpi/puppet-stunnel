@@ -4,10 +4,14 @@
 #
 # === Parameters
 #
-# [*services*]
+# [*accept*]
+#   accept connections on the specified address.
 #
 # [*cert*]
 #   Certificate to use for this tunnel
+#
+# [*client*]
+#   Whether this tunnel should be setup in client mode.
 #
 # [*options*]
 #   Options to pass to openssl.  To disable SSLv2 on your tunnel, you could pass
@@ -26,6 +30,7 @@
 define stunnel::tun (
   $accept,
   $connect,
+  $client = false,
   $cert = 'UNSET',
   $options = '',
   $template = 'stunnel/tun.erb',
@@ -41,6 +46,7 @@ define stunnel::tun (
     default => $cert,
   }
   validate_absolute_path( $cert_real )
+  validate_bool( $client )
 
   $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
   $output = "${stunnel::data::log_dir}/${name}.log"
