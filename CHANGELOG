@@ -1,3 +1,6 @@
+2014-03-20 Aaron Russo <arusso@berkeley.edu> - 1.1.0
+* issue #5 : add parameter to setup client tunnels
+
 2014-03-17 Aaron Russo <arusso@berkeley.edu> - 1.0.1
 * Ensure lsb is installed
 * bugfix: we weren't installing the right package on Debian systems

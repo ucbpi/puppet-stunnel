@@ -1,5 +1,5 @@
 name 'arusso-stunnel'
-version '1.0.1'
+version '1.1.0'
 summary "stunnel management"
 description "stunnel management module with support for multiple tunnels and 
  init scripts."
