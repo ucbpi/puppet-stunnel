@@ -1,3 +1,6 @@
+2014-03-31 Aaron Russo <arusso@berkeley.edu> - 1.1.1
+* issue #6 : improved README documentation (ross-williams)
+
 2014-03-20 Aaron Russo <arusso@berkeley.edu> - 1.1.0
 * issue #5 : add parameter to setup client tunnels
 
