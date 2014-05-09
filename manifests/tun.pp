@@ -21,7 +21,7 @@
 #   The ERB template to use when generating the configuration
 #
 # [*timeoutidle*]
-#   The idle timeout for the connection. Defaults to 60 seconds.
+#   The idle timeout for the connection. Defaults to 43200.
 #
 # [*debug*]
 #   Set the debug level for stunnel.  Valid values are any valid syslog
@@ -47,7 +47,7 @@ define stunnel::tun (
   $cert = 'UNSET',
   $options = '',
   $template = 'stunnel/tun.erb',
-  $timeoutidle = '60',
+  $timeoutidle = '43200',
   $debug = '5',
   $install_service = true,
   $output = 'UNSET',

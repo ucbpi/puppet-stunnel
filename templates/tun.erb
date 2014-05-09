@@ -9,7 +9,6 @@ debug = <%= @debug %>
 
 output = <%= @output_r %>
 
-timeoutidle = <%= @timeoutidle %> 
 options = <%= @options %>
 <% if @global_opts.is_a? Hash and @global_opts.keys.size > 0 -%>
 
@@ -31,6 +30,7 @@ options = <%= @options %>
 <% else -%>
   client=no
 <% end -%>
+TIMEOUTidle = <%= @timeoutidle %> 
 <% if @service_opts.is_a? Hash and @service_opts.keys.size > 0 -%>
 
   ; additional service options

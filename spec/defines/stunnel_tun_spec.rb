@@ -15,6 +15,7 @@ describe( 'stunnel::tun', :type => :define ) do
        /pid\ =\ \/var\/run\/stunnel-my-tunnel.pid/,
        /output\ =\ \/var\/log\/stunnel\/my-tunnel\.log/,
        /debug\ =\ 5/,
+       /TIMEOUTidle\ =\ 43200/,
      ]
      lines.each do |l|
        should contain_file('/etc/stunnel/conf.d/my-tunnel.conf').with_content(l)
@@ -33,8 +34,9 @@ describe( 'stunnel::tun', :type => :define ) do
      'install_service' => 'true',
      :output => '/var/log/stunnel/httpd-stunnel.log',
      :debug => '1',
-     :service_opts => { 'TIMEOUTidle' => '3600' },
+     :service_opts => { 'TIMEOUTbusy' => '600' },
      :global_opts => { 'compression' => 'deflate' },
+     :timeoutidle => '4000',
    }}
    it do
      should contain_service('stunnel-httpd').with({
@@ -52,7 +54,8 @@ describe( 'stunnel::tun', :type => :define ) do
        /output\ =\ \/var\/log\/stunnel\/httpd-stunnel\.log/,
        /debug\ =\ 1/,
        /compression\ =\ deflate/,
-       /TIMEOUTidle\ =\ 3600/,
+       /TIMEOUTbusy\ =\ 600/,
+       /TIMEOUTidle\ =\ 4000/,
      ]
      lines.each do |l|
        should contain_file('/etc/stunnel/conf.d/httpd.conf').with_content(l)
