@@ -27,6 +27,19 @@
 #   Set the debug level for stunnel.  Valid values are any valid syslog
 #   [facility.]level
 #
+# [*output*]
+#   location of logfile for this tunnel. if left unspecified, defaults to
+#   /var/log/stunnel/${name}.log, where ${name} is the name of the tunnel
+#   resource.
+#
+# [*global_opts*]
+#   hash of key/value pairs for additional stunnel global configuration options
+#   that are not already exposed as parameters.
+#
+# [*service_opts*]
+#   hash of key/value pairs for additional stunnel service configuration options
+#   that are not already exposed as parameters.
+#
 define stunnel::tun (
   $accept,
   $connect,
@@ -35,11 +48,17 @@ define stunnel::tun (
   $options = '',
   $template = 'stunnel/tun.erb',
   $timeoutidle = '60',
-  $debug = '0',
+  $debug = '5',
   $install_service = true,
+  $output = 'UNSET',
+  $global_opts = { },
+  $service_opts = { },
 ) {
   require stunnel
   include stunnel::data
+
+  validate_hash( $global_opts )
+  validate_hash( $service_opts )
 
   $cert_real = $cert ? {
     'UNSET' => "${stunnel::data::cert_dir}/${name}.pem",
@@ -49,7 +68,12 @@ define stunnel::tun (
   validate_bool( $client )
 
   $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
-  $output = "${stunnel::data::log_dir}/${name}.log"
+  $output_r = $output ? {
+    'UNSET' => "${::stunnel::data::log_dir}/${name}.log",
+    default => $output,
+  }
+  validate_absolute_path($output_r)
+
   $prog = $stunnel::data::bin_name
   $svc_bin = "${stunnel::data::bin_path}/${stunnel::data::bin_name}"
 
