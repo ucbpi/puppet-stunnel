@@ -27,6 +27,11 @@
 #   Set the debug level for stunnel.  Valid values are any valid syslog
 #   [facility.]level
 #
+# [*output*]
+#   location of logfile for this tunnel. if left unspecified, defaults to
+#   /var/log/stunnel/${name}.log, where ${name} is the name of the tunnel
+#   resource.
+#
 define stunnel::tun (
   $accept,
   $connect,
@@ -37,6 +42,7 @@ define stunnel::tun (
   $timeoutidle = '60',
   $debug = '0',
   $install_service = true,
+  $output = 'UNSET',
 ) {
   require stunnel
   include stunnel::data
@@ -49,7 +55,12 @@ define stunnel::tun (
   validate_bool( $client )
 
   $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
-  $output = "${stunnel::data::log_dir}/${name}.log"
+  $output_r = $output ? {
+    'UNSET' => "${::stunnel::data::log_dir}/${name}.log",
+    default => $output,
+  }
+  validate_absolute_path($output_r)
+
   $prog = $stunnel::data::bin_name
   $svc_bin = "${stunnel::data::bin_path}/${stunnel::data::bin_name}"
 
