@@ -33,6 +33,8 @@ describe( 'stunnel::tun', :type => :define ) do
      'install_service' => 'true',
      :output => '/var/log/stunnel/httpd-stunnel.log',
      :debug => '1',
+     :service_opts => { 'TIMEOUTidle' => '3600' },
+     :global_opts => { 'compression' => 'deflate' },
    }}
    it do
      should contain_service('stunnel-httpd').with({
@@ -49,6 +51,8 @@ describe( 'stunnel::tun', :type => :define ) do
        /options\ =\ NO_SSLv2/,
        /output\ =\ \/var\/log\/stunnel\/httpd-stunnel\.log/,
        /debug\ =\ 1/,
+       /compression\ =\ deflate/,
+       /TIMEOUTidle\ =\ 3600/,
      ]
      lines.each do |l|
        should contain_file('/etc/stunnel/conf.d/httpd.conf').with_content(l)

@@ -11,6 +11,13 @@ output = <%= @output_r %>
 
 timeoutidle = <%= @timeoutidle %> 
 options = <%= @options %>
+<% if @global_opts.is_a? Hash and @global_opts.keys.size > 0 -%>
+
+; additional global options
+  <%- @global_opts.each do |option_name,option_value| -%>
+<%= option_name %> = <%= option_value %>
+  <%- end -%>
+<%- end -%>
 
 [<%= @name %>]
 <% if @accept -%>
@@ -24,3 +31,10 @@ options = <%= @options %>
 <% else -%>
   client=no
 <% end -%>
+<% if @service_opts.is_a? Hash and @service_opts.keys.size > 0 -%>
+
+  ; additional service options
+  <%- @service_opts.each do |option_name,option_value| -%>
+  <%= option_name %> = <%= option_value %>
+  <%- end -%>
+<%- end -%>

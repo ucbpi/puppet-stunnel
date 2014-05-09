@@ -32,6 +32,14 @@
 #   /var/log/stunnel/${name}.log, where ${name} is the name of the tunnel
 #   resource.
 #
+# [*global_opts*]
+#   hash of key/value pairs for additional stunnel global configuration options
+#   that are not already exposed as parameters.
+#
+# [*service_opts*]
+#   hash of key/value pairs for additional stunnel service configuration options
+#   that are not already exposed as parameters.
+#
 define stunnel::tun (
   $accept,
   $connect,
@@ -43,9 +51,14 @@ define stunnel::tun (
   $debug = '5',
   $install_service = true,
   $output = 'UNSET',
+  $global_opts = { },
+  $service_opts = { },
 ) {
   require stunnel
   include stunnel::data
+
+  validate_hash( $global_opts )
+  validate_hash( $service_opts )
 
   $cert_real = $cert ? {
     'UNSET' => "${stunnel::data::cert_dir}/${name}.pem",
