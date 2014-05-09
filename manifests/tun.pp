@@ -40,7 +40,7 @@ define stunnel::tun (
   $options = '',
   $template = 'stunnel/tun.erb',
   $timeoutidle = '60',
-  $debug = '0',
+  $debug = '5',
   $install_service = true,
   $output = 'UNSET',
 ) {

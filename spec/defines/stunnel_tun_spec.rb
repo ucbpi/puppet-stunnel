@@ -14,6 +14,7 @@ describe( 'stunnel::tun', :type => :define ) do
        /connect=2345/,
        /pid\ =\ \/var\/run\/stunnel-my-tunnel.pid/,
        /output\ =\ \/var\/log\/stunnel\/my-tunnel\.log/,
+       /debug\ =\ 5/,
      ]
      lines.each do |l|
        should contain_file('/etc/stunnel/conf.d/my-tunnel.conf').with_content(l)
@@ -31,6 +32,7 @@ describe( 'stunnel::tun', :type => :define ) do
      'options' => 'NO_SSLv2',
      'install_service' => 'true',
      :output => '/var/log/stunnel/httpd-stunnel.log',
+     :debug => '1',
    }}
    it do
      should contain_service('stunnel-httpd').with({
@@ -46,6 +48,7 @@ describe( 'stunnel::tun', :type => :define ) do
        /cert\ =\ \/etc\/pki\/tls\/cert\/my-public.crt/,
        /options\ =\ NO_SSLv2/,
        /output\ =\ \/var\/log\/stunnel\/httpd-stunnel\.log/,
+       /debug\ =\ 1/,
      ]
      lines.each do |l|
        should contain_file('/etc/stunnel/conf.d/httpd.conf').with_content(l)
