@@ -166,6 +166,173 @@ package to create as many tunnels as you like, with a single computer
 implementing clients and servers for several different tunnels. Just
 declare a different `stunnel::tun` resource for each stunnel client or server.
 
+## stunnel::tun Attributes ##
+
+### accept ###
+
+Specify the port (and optionally IP address) on which stunnel should listen
+for connections.
+
+For an stunnel client, this will typically be the standard port for a service
+(e.g. 3306 for MySQL), as the tunnel is presenting the port to its user software.
+
+For an stunnel server, this will typically be a non-standard port that is being
+used to construct the tunnel (3307 is often used for MySQL as it is next to 3306).
+
+    accept  => '993',                # Listen on all IPv4 addresses on port 993.
+    accept  => '3307',               # Listen on all IPv4 addresses on port 3307.
+    accept  => '192.168.0.2:3306'    # Listen only on IPv4 address 192.168.0.2 on port 3306.
+    accept  => ':::993',             # Listen on all IPv6 addresses on port 993.
+
+This attribute must be specified.
+
+This attribute controls the `accept` service-level option in the stunnel configuration file.
+
+For more information on this attribute, see [the stunnel documentation](https://www.stunnel.org/static/stunnel.html)
+
+### cert ###
+
+Specify the location of the certificate file. See an earlier section
+for how to create and install a certificate file.
+
+    cert => '/etc/ssl/certs/mysql_stunnel.pem',
+
+This attribute must be specified.
+
+This attribute controls the `cert` service-level option in the stunnel configuration file.
+
+### client ###
+
+Specify whether the installation of stunnel that you are configuring is an
+stunnel client (true) or an stunnel server (false).
+
+    client => false,
+    client => true,
+
+This attribute must be specified.
+
+This attribute controls the `client` service-level option in the stunnel configuration file.
+
+### debug ###
+
+Specify the level of detail that you want in the log file. Specify 0 for the least
+logging, and 7 for the most logging.
+
+    debug => '0',   # emerg
+    debug => '1',   # alert
+    debug => '2',   # crit
+    debug => '3',   # err
+    debug => '4',   # warning
+    debug => '5',   # notice
+    debug => '6',   # info
+    debug => '7',   # debug
+   
+This attribute is optional and defaults to '5'.
+
+See also the `output` attribute which specifies where the logfile is.
+
+This attribute controls the `debug` service-level option in the stunnel configuration file.
+
+### global_opts ###
+
+Specify any global options that you wish to appear in the stunnel
+configuration file, but which this Puppet module does not support. By
+"global" is meant options that are specific to the stunnel installation
+as a whole, rather than to a specific tunnel.
+
+    global_opts => { 'setuid' => '32', 'setgid' => '104' },
+
+This attribute is optional and defaults to the empty hash {}.
+
+This attribute can be used to control arbitrary global
+options in the stunnel configuration file.
+
+For information on stunnel global options, see [the stunnel documentation](https://www.stunnel.org/static/stunnel.html)
+
+### install_service ###
+
+Specify whether you want this stunnel Puppet module to install stunnel
+as a service. (FIX: Provide more information about this).
+
+    install_service => false,
+    install_service => true,
+    
+This attribute is optional and defaults to `true`.
+
+This attribute controls (FIX: Specify what it controls).
+
+### options ###
+
+Specify any options that you want to pass to OpenSSL.
+
+    options => 'NO_SSLv2',     # This seems to be a good idea for some reason. :-)
+
+This attribute is optional and defaults to the empty hash {}.
+
+For more information on this attribute, see [the stunnel documentation](https://www.stunnel.org/static/stunnel.html)
+
+### output ###
+
+Specify the location of the stunnel log file.
+
+    output  => '/var/log/stunnel/mysql_stunnel.log',  # The stunnel log file.
+
+This attribute is optional and defaults to `??`. (FIX: Find out and insert the default here).
+
+See also the `debug` attribute which specifies the level of detail in the stunnel
+log file.
+
+This attribute controls the `output` service-level option in the stunnel configuration file.
+
+### service_opts ###
+
+Specify any service-level options that you wish to appear in the stunnel
+configuration file, but which this Puppet module does not support. By
+"service-level" is meant options that are specific to a particular
+tunnel configuration rather than the whole stunnel installation.
+
+    service_opts => { 'protocol' => 'imap', 'TIMEOUTbusy' => '60' },
+
+This attribute is optional and defaults to the empty hash `{}`.
+
+This attribute can be used to control arbitrary service-level
+options in the stunnel configuration file.
+
+For information on stunnel service-level options, see [the stunnel documentation](https://www.stunnel.org/static/stunnel.html)
+
+### template ###
+
+Specify a Puppet ERB template for the stunnel configuration file.
+
+    template => template('megacorp_stunnel/stunnel.cfg.erb'),
+
+This attribute is optional and defaults to a template with sensible default values.
+
+This attribute controls the overall form of the stunnel configuration file.
+
+### timeoutidle ###
+
+Specify the number of seconds that stunnel will allow a connection to
+be idle before terminating it.
+
+If you set this attribute too low, then you will experience seemingly
+spurious disconnections that might cause havoc. If you set this attribute
+too high, stunnel will keep open connections to zombie clients. Given
+that idle connections do not use up many resources, it's probably best
+to err on the high side, which is why the default is 12 hours.
+
+    timeoutidle => '10',       # Ten seconds.
+    timeoutidle => '60',       # One minute.
+    timeoutidle => '3600',     # One hour.
+    timeoutidle => '43200',    # 12 hours.
+    timeoutidle => '86400',    # One day.
+    timeoutidle => '604800',   # One week.
+   
+This attribute is optional and defaults to 43200 (12 hours).
+
+This attribute controls the `TIMEOUTidle` service-level option of
+the stunnel configuration file.
+
 ## Service Notification ##
 
 This stunnel Puppet package restarts the stunnel service if a configuration
@@ -213,6 +380,16 @@ then uninstall the Puppet stunnel model and install the arusso one as follows:
 
     puppet module uninstall stunnel
     puppet module install arusso-stunnel
+
+## Operational Errors ##
+
+If you find that the tunnel isn't working, look in the log file.
+If you see:
+
+    connect_blocking: s_poll_wait
+
+then one reason why this might be happening is if your firewall
+is blocking the tunnel.
 
 ## Certificates ##
 
