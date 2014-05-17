@@ -35,7 +35,7 @@ certificate. This can be done using the shell `openssl` command
     cat key.pem cert.pem >> stunnel.pem
 
 For more information, see
-https://www.digitalocean.com/community/articles/how-to-set-up-an-ssl-tunnel-using-stunnel-on-ubuntu 
+https://www.digitalocean.com/community/articles/how-to-set-up-an-ssl-tunnel-using-stunnel-on-ubuntu
 or go crazy Googling.
 
 ## How To Use Puppet To Install A Certificate File ##
@@ -226,7 +226,7 @@ logging, and 7 for the most logging.
     debug => '5',   # notice
     debug => '6',   # info
     debug => '7',   # debug
-   
+
 This attribute is optional and defaults to '5'.
 
 See also the `output` attribute which specifies where the logfile is.
@@ -249,23 +249,26 @@ options in the stunnel configuration file.
 
 For information on stunnel global options, see [the stunnel documentation](https://www.stunnel.org/static/stunnel.html)
 
-### install_service ###
+### install\_service ###
 
-Specify whether you want this stunnel Puppet module to install stunnel
-as a service. (FIX: Provide more information about this).
+Specify whether you want this stunnel Puppet module to install stunnel as a
+system service. Installing as a service currently places a sysvinit style
+initscript for each tunnel inside of /etc/init.d/stunnel-\<name\>.
 
     install_service => false,
     install_service => true,
-    
+
 This attribute is optional and defaults to `true`.
 
-This attribute controls (FIX: Specify what it controls).
+This attribute controls the installation of the init-script for this tunnel. If
+set to true, the init script will be installed. If set to false, the init-script
+will be removed.
 
 ### options ###
 
 Specify any options that you want to pass to OpenSSL.
 
-    options => 'NO_SSLv2',     # This seems to be a good idea for some reason. :-)
+    options => 'NO_SSLv2',     # SSLv2 is turrible. See: http://osvdb.org/56387
 
 This attribute is optional and defaults to the empty hash {}.
 
@@ -277,7 +280,8 @@ Specify the location of the stunnel log file.
 
     output  => '/var/log/stunnel/mysql_stunnel.log',  # The stunnel log file.
 
-This attribute is optional and defaults to `??`. (FIX: Find out and insert the default here).
+This attribute is optional and defaults to either /var/log/stunnel/$name (EL
+based systems) or /var/log/stunnel4/$name (Debian based systems).
 
 See also the `debug` attribute which specifies the level of detail in the stunnel
 log file.
@@ -327,7 +331,7 @@ to err on the high side, which is why the default is 12 hours.
     timeoutidle => '43200',    # 12 hours.
     timeoutidle => '86400',    # One day.
     timeoutidle => '604800',   # One week.
-   
+
 This attribute is optional and defaults to 43200 (12 hours).
 
 This attribute controls the `TIMEOUTidle` service-level option of
@@ -393,7 +397,7 @@ is blocking the tunnel.
 
 ## Certificates ##
 
-stunnel is picky about the certs.  You can find more information about it 
+stunnel is picky about the certs.  You can find more information about it
 [here](https://www.stunnel.org/static/stunnel.html) in the `CERTIFICATES`
 section.
 
@@ -434,7 +438,7 @@ References
 
     http://en.wikipedia.org/wiki/Secure_Sockets_Layer
 
-    https://www.digitalocean.com/community/articles/how-to-set-up-an-ssl-tunnel-using-stunnel-on-ubuntu 
+    https://www.digitalocean.com/community/articles/how-to-set-up-an-ssl-tunnel-using-stunnel-on-ubuntu
 
 License
 -------
