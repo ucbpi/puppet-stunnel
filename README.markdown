@@ -160,7 +160,7 @@ an stunnel server.
 
 ### Multiple Tunnels ###
 
-So long as you provide a distinct resource name (`mysql_stunnel` in the above
+So long as you provide a distinct resource name (`mysql\_stunnel` in the above
 examples) and use distinct TCP ports for each tunnel, you can use this Puppet
 package to create as many tunnels as you like, with a single computer
 implementing clients and servers for several different tunnels. Just
@@ -348,13 +348,13 @@ The package installs a configuration file at:
 
     /etc/stunnel/conf.d/mysql_stunnel.conf
 
-where `mysql_stunnel` is the name of your `stunnel::tun` resource as above.
+where `mysql\_stunnel` is the name of your `stunnel::tun` resource as above.
 
 This Puppet package also generates an init service configuration script at:
 
     /etc/init.d/stunnel-mysql_stunnel
 
-where `stunnel-mysql_stunnel` is the name of your `stunnel::tun` resource
+where `stunnel-mysql\_stunnel` is the name of your `stunnel::tun` resource
 with `stunnel-` prepended to it.
 
 ## stunnel Status ##
@@ -367,7 +367,7 @@ following shell commands:
     /etc/init.d/stunnel-mysql_stunnel restart
     /etc/init.d/stunnel-mysql_stunnel stop
 
-where `stunnel-mysql_stunnel` is the name of your `stunnel::tun` resource
+where `stunnel-mysql\_stunnel` is the name of your `stunnel::tun` resource
 with `stunnel-` prepended to it.
 
 ## Installation Errors ##
@@ -432,13 +432,10 @@ if we use the `stunnel::cert` class.  Here's a full example:
 References
 ----------
 
-    https://www.stunnel.org/
-
-    http://en.wikipedia.org/wiki/Stunnel
-
-    http://en.wikipedia.org/wiki/Secure_Sockets_Layer
-
-    https://www.digitalocean.com/community/articles/how-to-set-up-an-ssl-tunnel-using-stunnel-on-ubuntu
+* https://www.stunnel.org/
+* http://en.wikipedia.org/wiki/Stunnel
+* http://en.wikipedia.org/wiki/Secure_Sockets_Layer
+* https://www.digitalocean.com/community/articles/how-to-set-up-an-ssl-tunnel-using-stunnel-on-ubuntu
 
 License
 -------
