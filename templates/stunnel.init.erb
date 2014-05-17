@@ -39,6 +39,8 @@ pid() {
 }
 
 locked() {
+  # if the lock file directory doesn't exist, create it
+  [[ -d $(dirname $LOCK_FILE) ]] || mkdir -p $(dirname $LOCK_FILE)
   if [ -f $LOCK_FILE ]; then echo 1; return; fi
   echo 0;
 }
