@@ -13,7 +13,7 @@ options = <%= @options %>
 <% if @global_opts.is_a? Hash and @global_opts.keys.size > 0 -%>
 
 ; additional global options
-  <%- @global_opts.each do |option_name,option_value| -%>
+  <%- @global_opts.sort.map do |option_name,option_value| -%>
 <%= option_name %> = <%= option_value %>
   <%- end -%>
 <%- end -%>
