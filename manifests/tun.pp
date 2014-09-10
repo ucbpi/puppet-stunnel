@@ -65,7 +65,7 @@ define stunnel::tun (
     default => $cert,
   }
   validate_absolute_path( $cert_real )
-  validate_bool( $client )
+  validate_bool( str2bool($client) )
 
   $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
   $output_r = $output ? {
