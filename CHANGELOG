@@ -1,3 +1,7 @@
+2014-09-17 Aaron Russo <arusso@berkeley.edu> - 2.0.0
+* convert string representations of booleans into valid booleans (#13,14) (fgouteroux)
+* sort options in the tun file to prevent constant puppet change notifications (choffee)
+
 2014-05-08 Aaron Russo <arusso@berkeley.edu> - 1.2.0
 * match stunnel defaults w/debug=5 (#8)
 * add parameter to specify location of output (logging) (#8)

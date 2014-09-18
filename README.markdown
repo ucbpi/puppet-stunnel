@@ -451,13 +451,10 @@ Copyright &copy; 2013 The Regents of the University of California
 Contributors:
 -------------
 
-**Yann Vigara**
-
- * Debian/Ubuntu support
-
-**Ross Williams**
-
- * Documentation.
+* **Yann Vigara**
+* **Ross Williams**
+* **John Cooper**
+* **Francois Gouteroux**
 
 Contact
 -------
