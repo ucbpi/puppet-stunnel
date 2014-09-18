@@ -1,5 +1,5 @@
 2014-09-17 Aaron Russo <arusso@berkeley.edu> - 2.0.0
-* convert string representations of booleans into valid booleans (#16,17) (fgouteroux)
+* convert string representations of booleans into valid booleans (#13,14) (fgouteroux)
 * sort options in the tun file to prevent constant puppet change notifications (choffee)
 
 2014-05-08 Aaron Russo <arusso@berkeley.edu> - 1.2.0
