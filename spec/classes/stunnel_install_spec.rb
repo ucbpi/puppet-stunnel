@@ -13,7 +13,7 @@ describe 'stunnel::install' do
     let(:facts) { { 'osfamily' => 'Debian' } }
     it do
       should contain_package('stunnel4')
-      should contain_package('lsb')
+      should contain_package('lsb-base')
     end
   end
 end

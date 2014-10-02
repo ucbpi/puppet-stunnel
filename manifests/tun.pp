@@ -50,6 +50,7 @@ define stunnel::tun (
   $timeoutidle = '43200',
   $debug = '5',
   $install_service = true,
+  $service_ensure = 'running',
   $output = 'UNSET',
   $global_opts = { },
   $service_opts = { },
@@ -100,6 +101,7 @@ define stunnel::tun (
   }
   if $install_service {
     service { "stunnel-${name}":
+      ensure    => $service_ensure,
       enable    => true,
       require   => File["/etc/init.d/stunnel-${name}"],
       subscribe => File[$config_file],
