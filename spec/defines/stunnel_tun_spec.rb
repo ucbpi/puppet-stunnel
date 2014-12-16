@@ -62,4 +62,30 @@ describe( 'stunnel::tun', :type => :define ) do
      end
    end
  end
+
+ context "with multiple back-end servers" do
+   ['rr', 'prio'].each do |failover|
+     describe "and failover set to \"#{failover}\"" do
+       let(:facts) {{ 'osfamily' => 'RedHat' }}
+       let(:title) { 'httpd' }
+       let(:params) {{
+         :accept => '443',
+         :connect => ['server1:80', 'server2:80'],
+         :failover => failover,
+       }}
+
+       it do
+         lines = [
+           /accept=443/,
+           /connect=server1:80/,
+           /connect=server2:80/,
+         ]
+         failover == 'rr' ? lines << /failover=rr/ : lines << /failover=prio/
+         lines.each do |l|
+           should contain_file('/etc/stunnel/conf.d/httpd.conf').with_content(l)
+         end
+       end
+     end
+   end
+ end
 end
