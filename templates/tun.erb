@@ -22,9 +22,16 @@ options = <%= @options %>
 <% if @accept -%>
   accept=<%= @accept %>
 <% end -%>
-<% if @connect -%>
+<%- if @connect.is_a? Array -%>
+  <%- @connect.each do |c| -%>
+  connect=<%= c %>
+  <%- end -%>
+<%- else -%>
   connect=<%= @connect %>
-<% end -%>
+<%- end -%>
+<%- if @connect.is_a? Array -%>
+  failover=<%= @failover %>
+<%- end -%>
 <% if @client -%>
   client=yes
 <% else -%>

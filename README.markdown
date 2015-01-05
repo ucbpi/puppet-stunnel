@@ -233,6 +233,17 @@ See also the `output` attribute which specifies where the logfile is.
 
 This attribute controls the `debug` service-level option in the stunnel configuration file.
 
+### failover ###
+
+Specify the failover strategy when using multiple back-end servers.
+
+This attribute does not have any effort is you are not specifying multiple backend servers (as an array) as `connect` value.
+
+Valid options are `rr` (round-robin) or `prio` (priority/failover, where stunnel will try to connect
+to the first backend, then second, etc.).
+
+This attribute defaults to `rr`.
+
 ### global_opts ###
 
 Specify any global options that you wish to appear in the stunnel
@@ -455,6 +466,7 @@ Contributors:
 * **Ross Williams**
 * **John Cooper**
 * **Francois Gouteroux**
+* **Stephen Hoekstra**
 
 Contact
 -------

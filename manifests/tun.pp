@@ -27,6 +27,12 @@
 #   Set the debug level for stunnel.  Valid values are any valid syslog
 #   [facility.]level
 #
+# [*failover*]
+#   Configure the failover strategy for the service when using multiple backend
+#   servers. Valid values are 'rr' and 'prio', 'rr' being round robin and 'prio'
+#   being priority/failover (stunnel attempts to connect to backend servers in
+#   specified order).
+#
 # [*output*]
 #   location of logfile for this tunnel. if left unspecified, defaults to
 #   /var/log/stunnel/${name}.log, where ${name} is the name of the tunnel
@@ -46,6 +52,7 @@ define stunnel::tun (
   $client = false,
   $cert = 'UNSET',
   $options = '',
+  $failover = 'rr',
   $template = 'stunnel/tun.erb',
   $timeoutidle = '43200',
   $debug = '5',
@@ -60,6 +67,8 @@ define stunnel::tun (
 
   validate_hash( $global_opts )
   validate_hash( $service_opts )
+
+  validate_re( $failover, '(rr|prio)', '$failover must be either \'rr\' or \'prio\'')
 
   $cert_real = $cert ? {
     'UNSET' => "${stunnel::data::cert_dir}/${name}.pem",
