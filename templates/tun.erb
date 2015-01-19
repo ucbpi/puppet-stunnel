@@ -1,5 +1,4 @@
 # This file managed by Puppet
-cert = <%= @cert_real %>
 
 setuid = root
 setgid = root
@@ -42,6 +41,9 @@ options = <%= @options %>
 <% end -%>
 TIMEOUTidle = <%= @timeoutidle %> 
 <% if @service_opts.is_a? Hash and @service_opts.keys.size > 0 -%>
+  <%- if not @service_opts.has_key?('cert') -%>
+  cert = <%= @cert_real %>
+  <%- end -%>
 
   ; additional service options
   <%- @service_opts.sort.map do |option_name,option_value| -%>
