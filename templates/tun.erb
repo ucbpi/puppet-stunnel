@@ -9,7 +9,10 @@ debug = <%= @debug %>
 
 output = <%= @output_r %>
 
+<% if @options != '' -%>
 options = <%= @options %>
+<% end -%>
+
 <% if @global_opts.is_a? Hash and @global_opts.keys.size > 0 -%>
 
 ; additional global options
