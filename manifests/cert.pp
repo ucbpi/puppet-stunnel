@@ -17,7 +17,7 @@ define stunnel::cert (
       ensure => directory,
       owner  => 'root',
       group  => 'root',
-      mode   => '0555',
+      mode   => '0775',
     }
   }
 
@@ -26,7 +26,7 @@ define stunnel::cert (
       ensure => 'present',
       owner  => 'root',
       group  => 'root',
-      mode   => '0555',
+      mode   => '0775',
       source => 'puppet:///modules/stunnel/stunnel-combine-certs.rb',
     }
   }

@@ -14,6 +14,6 @@ class stunnel::config {
     ensure => directory,
     owner  => 'root',
     group  => 'root',
-    mode   => '0555',
+    mode   => '0775',
   }
 }

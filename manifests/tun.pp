@@ -92,7 +92,7 @@ define stunnel::tun (
     ensure  => 'present',
     owner   => 'root',
     group   => 'root',
-    mode    => '0444',
+    mode    => '0664',
     content => template('stunnel/tun.erb'),
   }
 
@@ -105,7 +105,7 @@ define stunnel::tun (
     ensure  => $initscript_ensure,
     owner   => 'root',
     group   => 'root',
-    mode    => '0550',
+    mode    => '0774',
     content => template('stunnel/stunnel.init.erb'),
   }
   if $install_service {

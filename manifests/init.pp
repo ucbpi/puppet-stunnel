@@ -7,7 +7,7 @@ class stunnel {
     ensure => 'present',
     owner  => 'root',
     group  => 'root',
-    mode   => '0555',
+    mode   => '0775',
     source => 'puppet:///modules/stunnel/stunnel-combine-certs.rb',
   }
 
