@@ -258,6 +258,10 @@ This attribute is optional and defaults to the empty hash {}.
 This attribute can be used to control arbitrary global
 options in the stunnel configuration file.
 
+Support for assigning multiple global opts as an array is also available.
+
+    global_opts => { 'socket' => ['l:TCP_NODELAY=1', 'r:TCP_NODELAY=1'] }
+
 For information on stunnel global options, see [the stunnel documentation](https://www.stunnel.org/static/stunnel.html)
 
 ### install\_service ###
