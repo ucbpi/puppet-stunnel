@@ -15,9 +15,15 @@ options = <%= @options %>
 
 <% if @global_opts.is_a? Hash and @global_opts.keys.size > 0 -%>
 
-; additional global options
   <%- @global_opts.sort.map do |option_name,option_value| -%>
+; additional global options
+    <% if option_value.kind_of?(Array) -%>
+      <%- for val in option_value do -%>
+<%= option_name %> = <%= val %>
+      <%- end -%>
+    <% else -%>
 <%= option_name %> = <%= option_value %>
+    <%- end -%>
   <%- end -%>
 <%- end -%>
 

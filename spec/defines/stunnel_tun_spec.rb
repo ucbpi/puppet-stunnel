@@ -63,6 +63,29 @@ describe( 'stunnel::tun', :type => :define ) do
    end
  end
 
+ context "with multipule socket options" do
+   let(:facts) {{ 'osfamily' => 'RedHat' }}
+   let(:title) { 'httpd' }
+   let(:params) {{
+     'accept' => '987',
+     'connect' => 'localhost:789',
+     'cert' => '/etc/pki/tls/cert/my-public.crt',
+     'options' => 'NO_SSLv2',
+     'install_service' => 'true',
+     :output => '/var/log/stunnel/httpd-stunnel.log',
+     :debug => '1',
+     :service_opts => { 'TIMEOUTbusy' => '600' },
+     :global_opts => { 'compression' => 'deflate',
+                       'socket' => ['l:SO_TIMEOUT=1','r:SO_TIMEOUT=2'],
+                     },
+     :timeoutidle => '4000',
+   }}
+   it "should contain multipule socket lines" do
+       should contain_file('/etc/stunnel/conf.d/httpd.conf') \
+           .with_content(/socket\ =\ l:SO_TIMEOUT=1\s+socket\ =\ r:SO_TIMEOUT=2/m)
+   end
+ end
+
  context "with multiple back-end servers" do
    ['rr', 'prio'].each do |failover|
      describe "and failover set to \"#{failover}\"" do
