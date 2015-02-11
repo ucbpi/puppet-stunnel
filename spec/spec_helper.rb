@@ -1,3 +1,6 @@
+# Temporary due to https://github.com/rspec/rspec-expectations/issues/573
+#module Encoding; CompatibilityError = Class.new(StandardError); end if RUBY_VERSION < '1.9'
+
 require 'rspec-puppet'
 
 fixture_path = File.expand_path(File.join(__FILE__, '..', 'fixtures'))

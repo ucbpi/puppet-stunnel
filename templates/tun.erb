@@ -1,5 +1,10 @@
 # This file managed by Puppet
 cert = <%= @cert_real %>
+<% if @cafile_real != '' -%>
+CAfile = <%= @cafile_real %>
+<% else -%>
+# CAfile = /path/to/cafile.crt
+<% end -%>
 
 setuid = root
 setgid = root
