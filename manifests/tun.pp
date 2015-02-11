@@ -7,6 +7,9 @@
 # [*accept*]
 #   accept connections on the specified address.
 #
+# [*cafile*]
+#   cafile to use for this tunnel
+#
 # [*cert*]
 #   Certificate to use for this tunnel
 #
@@ -49,8 +52,9 @@
 define stunnel::tun (
   $accept,
   $connect,
-  $client = false,
+  $cafile = '',
   $cert = 'UNSET',
+  $client = false,
   $options = '',
   $failover = 'rr',
   $template = 'stunnel/tun.erb',
@@ -67,12 +71,18 @@ define stunnel::tun (
 
   validate_hash( $global_opts )
   validate_hash( $service_opts )
-
   validate_re( $failover, '(rr|prio)', '$failover must be either \'rr\' or \'prio\'')
 
+  $cafile_real = $cafile ? {
+    'UNSET' => '',
+    default => $cafile,
+  }
   $cert_real = $cert ? {
     'UNSET' => "${stunnel::data::cert_dir}/${name}.pem",
     default => $cert,
+  }
+  if $cafile_real != '' {
+    validate_absolute_path( $cafile_real )
   }
   validate_absolute_path( $cert_real )
   validate_bool( str2bool($client) )

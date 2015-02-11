@@ -190,6 +190,12 @@ This attribute controls the `accept` service-level option in the stunnel configu
 
 For more information on this attribute, see [the stunnel documentation](https://www.stunnel.org/static/stunnel.html)
 
+### cafile ###
+
+Specify the location of the cafile.
+
+    cafile => '/etc/pki/tls/certs/cafile.crt'
+
 ### cert ###
 
 Specify the location of the certificate file. See an earlier section
