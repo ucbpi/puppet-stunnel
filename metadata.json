@@ -22,7 +22,7 @@
     },
     {
     "operatingsystem": "Debian",
-    "operatingsystemrelease": [ "6", "7" ],
+    "operatingsystemrelease": [ "6", "7" ]
     }
-  ],
+  ]
 }
