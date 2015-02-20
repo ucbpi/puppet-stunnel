@@ -1,0 +1,28 @@
+{
+  "name": "arusso-stunnel",
+  "version": "2.1.0",
+  "author": "arusso",
+  "summary": "stunnel management",
+  "license": "MIT License",
+  "source": "https://github.com/arusso/puppet-stunnel/archive/master.tar.gz",
+  "project_page": "https://github.com/arusso/puppet-stunnel",
+  "description": "stunnel management module with support for multiple tunnels, init\n scripts and both server/client tunnels",
+  "issues_url": "https://github.com/arusso/puppet-stunnel/issues",
+  "dependencies": [
+    {"version_requirement":">= 4.0.0","name":"puppetlabs/stdlib"}
+  ],
+  "operatingsystem_support": [
+    {
+    "operatingsystem":"RedHat",
+    "operatingsystemrelease":[ "5", "6", "7" ]
+    },
+    {
+    "operatingsystem": "Ubuntu",
+    "operatingsystemrelease": [ "12.04", "14.04" ]
+    },
+    {
+    "operatingsystem": "Debian",
+    "operatingsystemrelease": [ "6", "7" ],
+    }
+  ],
+}
