@@ -13,11 +13,15 @@ pid = <%= @pid %>
 debug = <%= @debug %>
 
 output = <%= @output_r %>
+<%- if @options.is_a? String and @options != '' -%>
 
-<% if @options != '' -%>
 options = <%= @options %>
-<% end -%>
+<%- elsif @options.is_a? Array -%>
 
+  <%- @options.each do |o| -%>
+options = <%= o %>
+  <%- end -%>
+<%- end -%>
 <% if @global_opts.is_a? Hash and @global_opts.keys.size > 0 -%>
 
   <%- @global_opts.sort.map do |option_name,option_value| -%>
