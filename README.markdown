@@ -243,7 +243,7 @@ This attribute controls the `debug` service-level option in the stunnel configur
 
 Specify the failover strategy when using multiple back-end servers.
 
-This attribute does not have any effort is you are not specifying multiple backend servers (as an array) as `connect` value.
+This attribute does not have any effect if you are not specifying multiple backend servers (as an array) as `connect` value.
 
 Valid options are `rr` (round-robin) or `prio` (priority/failover, where stunnel will try to connect
 to the first backend, then second, etc.).
