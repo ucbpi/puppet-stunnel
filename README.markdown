@@ -291,7 +291,7 @@ Specify any options that you want to pass to OpenSSL.
 
     options => 'NO_SSLv2',     # SSLv2 is turrible. See: http://osvdb.org/56387
 
-This attribute is optional and defaults to the empty hash {}.
+This attribute is optional and defaults to the empty string ''. Only one option can be specified at present.
 
 For more information on this attribute, see [the stunnel documentation](https://www.stunnel.org/static/stunnel.html)
 
