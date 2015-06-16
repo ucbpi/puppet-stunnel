@@ -137,4 +137,16 @@ describe( 'stunnel::tun', :type => :define ) do
            .with_content(/options = NO_SSLv2$\s+options = NO_SSLv3$/m)
    end
  end
+
+ context "with client=true and no cert" do
+   let(:facts) {{ 'osfamily' => 'RedHat' }}
+   let(:title) { 'httpd' }
+   let(:params) {{
+     'accept' => '987',
+     'client' => true,
+     'connect' => 'localhost:789',
+   }}
+   it { should contain_file('/etc/stunnel/conf.d/httpd.conf').with_content(/\s+client=yes$/) }
+   it { should contain_file('/etc/stunnel/conf.d/httpd.conf').without_content(/^\s+cert = /) }
+ end
 end
