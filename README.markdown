@@ -203,9 +203,13 @@ for how to create and install a certificate file.
 
     cert => '/etc/ssl/certs/mysql_stunnel.pem',
 
-This attribute must be specified.
-
 This attribute controls the `cert` service-level option in the stunnel configuration file.
+
+The behaviour when this parameter is not specified depends on the value of the
+`client` parameter. If `client` is `false`, the cert option will be set to look
+for certs that match the service name in the `/etc/stunnel/certs` directory. If
+`client` is `true`, the cert option will be omitted in the stunnel
+configuration file.
 
 ### client ###
 
