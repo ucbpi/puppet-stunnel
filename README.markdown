@@ -87,23 +87,24 @@ separately on the server computer. The same `.pem` certificate file is provided
 to each of them. The two services communicate with each other to establish the
 connection from a port on the client computer to a port on the server computer.
 
-In this example, a MySQL client connects to the MySQL server by connecting to TCP port
-3306 on the client computer, just as if the MySQL server were running on the client
-computer. The stunnel client service on the client computer then accepts the connection
-and connects to TCP port 3307 on the server computer using an encrypted protocol that
-employs the certificate in the `.pem` file at each end. On the server computer, an stunnel
-server service accepts the connection to TCP port 3307 and connects to TCP port 3306 on the
-server computer where the MySQL database server is waiting to accept the connection.
-The result is that the client thinks that the server is on its computer, and the server
-thinks that the client is on its computer.
+In this example, a MySQL client connects to the MySQL server by connecting to
+TCP port 3306 on the client computer, just as if the MySQL server were running
+on the client computer. The stunnel client service on the client computer then
+accepts the connection and connects to TCP port 3307 on the server computer
+using an encrypted protocol that employs the certificate in the `.pem` file on
+the server computer. On the server computer, an stunnel server service accepts
+the connection to TCP port 3307 and connects to TCP port 3306 on the server
+computer where the MySQL database server is waiting to accept the connection.
+The result is that the client thinks that the server is on its computer, and
+the server thinks that the client is on its computer.
 
-For the purposes of this example, we assume that the same `.pem` certificate file
+For the purposes of this example, we assume that the `.pem` certificate file
 has been installed at
 
     /etc/ssl/certs/mysql_stunnel.pem
 
-on both the client and the server computers. See an earlier section for how to generate
-a certificate file.
+on the server computer. See an earlier section for how to generate a
+certificate file.
 
 To create the tunnel, we install an stunnel client service on the client computer
 and an stunnel server service on the server computer. Here is the Puppet configuration
@@ -115,8 +116,7 @@ server computer for `db.domain.com`.
     stunnel::tun { 'mysql_stunnel':
       accept  => '3306',               # The stunnel client will listen to this port.
       connect => "db.domain.com:3307", # The stunnel client will connect to this port.
-      options => ['NO_SSLv2, 'NO_SSLv3''],
-      cert    => '/etc/ssl/certs/mysql_stunnel.pem',
+      options => ['NO_SSLv2, 'NO_SSLv3'],
       client  => true,
     }
 
@@ -203,9 +203,13 @@ for how to create and install a certificate file.
 
     cert => '/etc/ssl/certs/mysql_stunnel.pem',
 
-This attribute must be specified.
-
 This attribute controls the `cert` service-level option in the stunnel configuration file.
+
+The behaviour when this parameter is not specified depends on the value of the
+`client` parameter. If `client` is `false`, the cert option will be set to look
+for certs that match the service name in the `/etc/stunnel/certs` directory. If
+`client` is `true`, the cert option will be omitted in the stunnel
+configuration file.
 
 ### client ###
 
