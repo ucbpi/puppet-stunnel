@@ -69,7 +69,7 @@ at `/etc/certs/stunnel-imaps.pem`. Here is the Puppet configuration to do this:
     stunnel::tun { 'imaps':
       accept  => '993',
       connect => 'localhost:143',
-      options => 'NO_SSLv2',
+      options => ['NO_SSLv2'],
       cert    => '/etc/certs/stunnel-imaps.pem',
       client  => false,
     }
@@ -115,7 +115,7 @@ server computer for `db.domain.com`.
     stunnel::tun { 'mysql_stunnel':
       accept  => '3306',               # The stunnel client will listen to this port.
       connect => "db.domain.com:3307", # The stunnel client will connect to this port.
-      options => 'NO_SSLv2',
+      options => ['NO_SSLv2'],
       cert    => '/etc/ssl/certs/mysql_stunnel.pem',
       client  => true,
     }
@@ -128,7 +128,7 @@ This configuration should only be applied to the server computer.
       accept  => '3307', # The stunnel server will listen to this port.
       connect => '3306', # The stunnel server will connect to this port.
                          # Note: I tried 'localhost:3306', but the 'localhost' stopped it from working.
-      options => 'NO_SSLv2',
+      options => ['NO_SSLv2'],
       cert    => '/etc/ssl/certs/mysql_stunnel.pem',
       client  => false,
     }
@@ -289,9 +289,10 @@ will be removed.
 
 Specify any options that you want to pass to OpenSSL.
 
-    options => 'NO_SSLv2',     # SSLv2 is turrible. See: http://osvdb.org/56387
+    options => ['NO_SSLv2'],     # SSLv2 is turrible. See: http://osvdb.org/56387
 
-This attribute is optional and defaults to the empty string ''. Only one option can be specified at present.
+This attribute is optional and defaults to the empty array []. For backwards
+compatability, a single option can be passed as a string.
 
 For more information on this attribute, see [the stunnel documentation](https://www.stunnel.org/static/stunnel.html)
 
@@ -442,7 +443,7 @@ if we use the `stunnel::cert` class.  Here's a full example:
     stunnel::tun { 'imaps':
       accept   => '993',
       connect  => '143',
-      options  => 'NO_SSLv2',
+      options  => ['NO_SSLv2'],
     }
 
     stunnel::cert { 'imaps':

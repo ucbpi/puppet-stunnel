@@ -17,8 +17,9 @@
 #   Whether this tunnel should be setup in client mode.
 #
 # [*options*]
-#   Options to pass to openssl.  To disable SSLv2 on your tunnel, you could pass
-#   "NO_SSLv2" as an option.
+#   Options to pass to openssl.  To disable SSLv2 on your tunnel, you could
+#   pass "NO_SSLv2" as an option. This parameter should be passed an array, but
+#   for backwards compatability a single option can be passed as a string.
 #
 # [*template*]
 #   The ERB template to use when generating the configuration
@@ -55,7 +56,7 @@ define stunnel::tun (
   $cafile = '',
   $cert = 'UNSET',
   $client = false,
-  $options = '',
+  $options = [ ],
   $failover = 'rr',
   $template = 'stunnel/tun.erb',
   $timeoutidle = '43200',
@@ -86,6 +87,14 @@ define stunnel::tun (
   }
   validate_absolute_path( $cert_real )
   validate_bool( str2bool($client) )
+
+  if is_string($options) {
+    $options_r = [ $options ]
+  } elsif is_array($options) {
+    $options_r = $options
+  } else {
+    fail('$options must be an array, or a string containing a single option')
+  }
 
   $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
   $output_r = $output ? {

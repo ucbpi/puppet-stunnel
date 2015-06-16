@@ -114,4 +114,27 @@ describe( 'stunnel::tun', :type => :define ) do
      end
    end
  end
+
+ context "with an array of options" do
+   let(:facts) {{ 'osfamily' => 'RedHat' }}
+   let(:title) { 'httpd' }
+   let(:params) {{
+     'accept' => '987',
+     'connect' => 'localhost:789',
+     'cert' => '/etc/pki/tls/cert/my-public.crt',
+     'options' => ['NO_SSLv2','NO_SSLv3'],
+     'install_service' => 'true',
+     :output => '/var/log/stunnel/httpd-stunnel.log',
+     :debug => '1',
+     :service_opts => { 'TIMEOUTbusy' => '600' },
+     :global_opts => { 'compression' => 'deflate',
+                       'socket' => ['l:SO_TIMEOUT=1','r:SO_TIMEOUT=2'],
+                     },
+     :timeoutidle => '4000',
+   }}
+   it "should contain multiple options lines" do
+       should contain_file('/etc/stunnel/conf.d/httpd.conf') \
+           .with_content(/options = NO_SSLv2$\s+options = NO_SSLv3$/m)
+   end
+ end
 end
