@@ -77,14 +77,25 @@ define stunnel::tun (
     'UNSET' => '',
     default => $cafile,
   }
-  $cert_real = $cert ? {
-    'UNSET' => "${stunnel::data::cert_dir}/${name}.pem",
-    default => $cert,
+
+  # Clients don't require a certificate but servers do
+  if $client {
+    $cert_default = ''
+  } else {
+    $cert_default = "${stunnel::data::cert_dir}/${name}.pem"
   }
+  if $cert == 'UNSET' {
+    $cert_real = $cert_default
+  } else {
+    $cert_real = $cert
+  }
+
   if $cafile_real != '' {
     validate_absolute_path( $cafile_real )
   }
-  validate_absolute_path( $cert_real )
+  if $cert_real != '' {
+    validate_absolute_path( $cert_real )
+  }
   validate_bool( str2bool($client) )
 
   $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
