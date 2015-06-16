@@ -14,8 +14,8 @@ debug = <%= @debug %>
 
 output = <%= @output_r %>
 
-<% if @options != '' -%>
-options = <%= @options %>
+<% @options_r.each do |option| -%>
+options = <%= option %>
 <% end -%>
 
 <% if @global_opts.is_a? Hash and @global_opts.keys.size > 0 -%>
