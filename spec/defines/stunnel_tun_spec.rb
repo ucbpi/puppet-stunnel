@@ -138,15 +138,26 @@ describe( 'stunnel::tun', :type => :define ) do
    end
  end
 
- context "with client=true and no cert" do
+ context "with ensure = absent" do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
-   let(:title) { 'httpd' }
+   let(:title) { 'mytunnel' }
    let(:params) {{
-     'accept' => '987',
-     'client' => true,
-     'connect' => 'localhost:789',
+     :accept          => '987',
+     :connect         => 'localhost:789',
+     :ensure          => 'absent',
+     :install_service => true,
+     :service_ensure  => 'running',
    }}
-   it { should contain_file('/etc/stunnel/conf.d/httpd.conf').with_content(/\s+client=yes$/) }
-   it { should contain_file('/etc/stunnel/conf.d/httpd.conf').without_content(/^\s+cert = /) }
+   it { should contain_file('/etc/stunnel/conf.d/mytunnel.conf').with_ensure('absent') }
+   it { should contain_file('/etc/init.d/stunnel-mytunnel').with_ensure('absent') }
+   it do
+     should contain_service('stunnel-mytunnel').with( {
+       :ensure => 'stopped',
+       :enable => 'false',
+     } )
+  end
+     it { should contain_service('stunnel-mytunnel').that_comes_before('File[/etc/init.d/stunnel-mytunnel]') }
  end
+
+ context ""
 end
