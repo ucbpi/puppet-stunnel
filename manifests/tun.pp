@@ -123,7 +123,7 @@ define stunnel::tun (
     owner   => 'root',
     group   => 'root',
     mode    => '0444',
-    content => template('stunnel/tun.erb'),
+    content => template("${template}"),
   }
 
   # setup our init script / service
