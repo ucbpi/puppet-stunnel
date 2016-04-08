@@ -6,7 +6,9 @@ if ENV.key?('PUPPET_VERSION')
    puppetversion = "~> 2.7.0"
 end
 
-gem 'rake'
+# pin rake to this version for as long as we need to test against
+# ruby 1.8.7
+gem 'rake', '10.5.0'
 gem 'puppet-lint'
 gem "rspec-puppet", :git => 'https://github.com/rodjek/rspec-puppet.git'
 gem 'puppet', puppetversion
