@@ -1,3 +1,11 @@
+2016-04-08 Aaron Russo <arusso@berkeley.edu> - 2.2.0
+* stunnel::tun options parameter now handles an array for multiple options (mjs510)
+* support uninstalling stunnel::tun resources (mjs510)
+* update documentation to show disabling of SSLv3 by default (mjs510)
+* fix: make cert param optional if client == true (mjs510)
+* fix: actually use a custom stunnel::tun template if provided (albustax)
+* fix: anchor regex pattern validating failover param (mjs510)
+
 2015-02-19 Aaron Russo <arusso@berkeley.edu> - 2.1.1
 * stop testing puppet 3.3 and 3.4, test 3.6 and 3.7 (with and w/o future parser)
 * fix syntax error in metadata.json causing puppet to fail
