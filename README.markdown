@@ -472,7 +472,7 @@ See LICENSE file
 Copyright
 ---------
 
-Copyright &copy; 2013 The Regents of the University of California
+Copyright &copy; 2016 The Regents of the University of California
 
 
 Contributors:
@@ -483,6 +483,8 @@ Contributors:
 * **John Cooper**
 * **Francois Gouteroux**
 * **Stephen Hoekstra**
+* **mjs510**
+* **Olivier Fontannaud**
 
 Contact
 -------
