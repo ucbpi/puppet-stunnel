@@ -50,6 +50,10 @@
 #   hash of key/value pairs for additional stunnel service configuration options
 #   that are not already exposed as parameters.
 #
+# [*ensure*]
+#   whether to set up or remove this tunnel. Valid values are 'absent' and
+#   'present'. Defaults to 'present'.
+#
 define stunnel::tun (
   $accept,
   $connect,
@@ -66,6 +70,7 @@ define stunnel::tun (
   $output = 'UNSET',
   $global_opts = { },
   $service_opts = { },
+  $ensure = 'present',
 ) {
   require stunnel
   include stunnel::data
@@ -73,6 +78,7 @@ define stunnel::tun (
   validate_hash( $global_opts )
   validate_hash( $service_opts )
   validate_re( $failover, '^(rr|prio)$', '$failover must be either \'rr\' or \'prio\'')
+  validate_re( $ensure, '^(absent|present)$', '$ensure must be either \'absent\' or \'present\'')
 
   $cafile_real = $cafile ? {
     'UNSET' => '',
@@ -119,7 +125,7 @@ define stunnel::tun (
 
   $config_file = "${stunnel::data::conf_d_dir}/${name}.conf"
   file { $config_file:
-    ensure  => 'present',
+    ensure  => $ensure,
     owner   => 'root',
     group   => 'root',
     mode    => '0444',
@@ -127,9 +133,10 @@ define stunnel::tun (
   }
 
   # setup our init script / service
-  $initscript_ensure = $install_service ? {
-    true    => 'present',
-    default => 'absent',
+  if $install_service and $ensure == 'present' {
+    $initscript_ensure = 'present'
+  } else {
+    $initscript_ensure = 'absent'
   }
   file { "/etc/init.d/stunnel-${name}":
     ensure  => $initscript_ensure,
@@ -138,11 +145,27 @@ define stunnel::tun (
     mode    => '0550',
     content => template('stunnel/stunnel.init.erb'),
   }
-  if $install_service {
+  if $install_service or $ensure == 'absent' {
+    if $ensure == 'absent' {
+      $service_ensure_real = 'stopped'
+      $service_enable = false
+      # When removing, the init file should be removed after the service is
+      # stopped
+      $service_require = undef
+      $service_before = File["/etc/init.d/stunnel-${name}"]
+    } else {
+      $service_ensure_real = $service_ensure
+      $service_enable = true
+      # When installing, the init file should be created before the service is
+      # started
+      $service_require = File["/etc/init.d/stunnel-${name}"]
+      $service_before = undef
+    }
     service { "stunnel-${name}":
-      ensure    => $service_ensure,
-      enable    => true,
-      require   => File["/etc/init.d/stunnel-${name}"],
+      ensure    => $service_ensure_real,
+      enable    => $service_enable,
+      require   => $service_require,
+      before    => $service_before,
       subscribe => File[$config_file],
     }
   }
