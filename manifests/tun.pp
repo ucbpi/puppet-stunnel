@@ -72,7 +72,7 @@ define stunnel::tun (
 
   validate_hash( $global_opts )
   validate_hash( $service_opts )
-  validate_re( $failover, '(rr|prio)', '$failover must be either \'rr\' or \'prio\'')
+  validate_re( $failover, '^(rr|prio)$', '$failover must be either \'rr\' or \'prio\'')
 
   $cafile_real = $cafile ? {
     'UNSET' => '',
