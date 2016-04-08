@@ -82,10 +82,10 @@ between a MySQL client on one computer (the "client computer") and a MySQL serve
 second computer (the "server computer"). However, you should be able to adapt the
 example to work for any non-MySQL TCP connection.
 
-In this example, an stunnel service is installed on the client computer and also
-separately on the server computer. The same `.pem` certificate file is provided
-to each of them. The two services communicate with each other to establish the
-connection from a port on the client computer to a port on the server computer.
+In this example, an stunnel service is installed on the client computer and
+also separately on the server computer.  The two services communicate with each
+other to establish the connection from a port on the client computer to a port
+on the server computer.
 
 In this example, a MySQL client connects to the MySQL server by connecting to
 TCP port 3306 on the client computer, just as if the MySQL server were running
