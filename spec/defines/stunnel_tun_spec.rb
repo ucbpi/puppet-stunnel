@@ -5,8 +5,8 @@ describe( 'stunnel::tun', :type => :define ) do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'my-tunnel' }
    let(:params) {{
-     'accept' => '1234',
-     'connect' => '2345',
+     :accept => '1234',
+     :connect => '2345',
    }}
    it do
      lines = [
@@ -29,9 +29,9 @@ describe( 'stunnel::tun', :type => :define ) do
 
    it 'should contain a service which requires the init script' do
      should contain_service('stunnel-my-tunnel').with({
-       'enable' => true,
-       'require' => 'File[/etc/init.d/stunnel-my-tunnel]',
-       'subscribe' => 'File[/etc/stunnel/conf.d/my-tunnel.conf]',
+       :enable => true,
+       :require => 'File[/etc/init.d/stunnel-my-tunnel]',
+       :subscribe => 'File[/etc/stunnel/conf.d/my-tunnel.conf]',
      })
    end
  end
@@ -40,12 +40,12 @@ describe( 'stunnel::tun', :type => :define ) do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'httpd' }
    let(:params) {{
-     'accept' => '987',
-     'connect' => 'localhost:789',
-     'cert' => '/etc/pki/tls/cert/my-public.crt',
+     :accept => '987',
+     :connect => 'localhost:789',
+     :cert => '/etc/pki/tls/cert/my-public.crt',
      :cafile => '/etc/pki/tls/certs/ca-bundle.crt',
-     'options' => 'NO_SSLv2',
-     'install_service' => 'true',
+     :options => 'NO_SSLv2',
+     :install_service => 'true',
      :output => '/var/log/stunnel/httpd-stunnel.log',
      :debug => '1',
      :service_opts => { 'TIMEOUTbusy' => '600' },
@@ -76,11 +76,11 @@ describe( 'stunnel::tun', :type => :define ) do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'httpd' }
    let(:params) {{
-     'accept' => '987',
-     'connect' => 'localhost:789',
-     'cert' => '/etc/pki/tls/cert/my-public.crt',
-     'options' => 'NO_SSLv2',
-     'install_service' => 'true',
+     :accept => '987',
+     :connect => 'localhost:789',
+     :cert => '/etc/pki/tls/cert/my-public.crt',
+     :options => 'NO_SSLv2',
+     :install_service => 'true',
      :output => '/var/log/stunnel/httpd-stunnel.log',
      :debug => '1',
      :service_opts => { 'TIMEOUTbusy' => '600' },
@@ -125,11 +125,11 @@ describe( 'stunnel::tun', :type => :define ) do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'httpd' }
    let(:params) {{
-     'accept' => '987',
-     'connect' => 'localhost:789',
-     'cert' => '/etc/pki/tls/cert/my-public.crt',
-     'options' => ['NO_SSLv2','NO_SSLv3'],
-     'install_service' => 'true',
+     :accept => '987',
+     :connect => 'localhost:789',
+     :cert => '/etc/pki/tls/cert/my-public.crt',
+     :options => ['NO_SSLv2','NO_SSLv3'],
+     :install_service => 'true',
      :output => '/var/log/stunnel/httpd-stunnel.log',
      :debug => '1',
      :service_opts => { 'TIMEOUTbusy' => '600' },
@@ -181,9 +181,9 @@ describe( 'stunnel::tun', :type => :define ) do
 
    it 'should contain a service which requires the service unit config' do
      should contain_service('stunnel-mytunnel').with({
-       'enable' => true,
-       'require' => 'File[/etc/systemd/system/stunnel-mytunnel.service]',
-       'subscribe' => 'File[/etc/stunnel/conf.d/mytunnel.conf]',
+       :enable => true,
+       :require => 'File[/etc/systemd/system/stunnel-mytunnel.service]',
+       :subscribe => 'File[/etc/stunnel/conf.d/mytunnel.conf]',
      })
    end
  end
