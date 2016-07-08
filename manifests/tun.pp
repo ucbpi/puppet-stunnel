@@ -85,6 +85,8 @@ define stunnel::tun (
   require stunnel
   include stunnel::data
 
+  validate_re( $service_init_system, '^(sysv|systemd)$',
+    '$service_init_system must be either \'sysv\' or \'systemd\'')
   validate_hash( $global_opts )
   validate_hash( $service_opts )
   validate_re( $failover, '^(rr|prio)$', '$failover must be either \'rr\' or \'prio\'')
