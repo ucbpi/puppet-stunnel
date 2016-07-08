@@ -54,6 +54,15 @@
 #   whether to set up or remove this tunnel. Valid values are 'absent' and
 #   'present'. Defaults to 'present'.
 #
+# [*install_service*]
+#   Whether or not to install an init script for this tunnel (boolean).
+#   Defaults to true
+#
+# [*service_init_system*]
+#   Which init system will be managing this service. Valid values are 'sysv'
+#   and 'systemd'.
+#   Defaults to 'sysv'
+#
 define stunnel::tun (
   $accept,
   $connect,
