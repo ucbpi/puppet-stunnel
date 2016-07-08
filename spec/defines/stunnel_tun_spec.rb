@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe( 'stunnel::tun', :type => :define ) do
- context "with a basic tunnel" do
+ context 'with a basic tunnel' do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'my-tunnel' }
    let(:params) {{
@@ -36,7 +36,7 @@ describe( 'stunnel::tun', :type => :define ) do
    end
  end
 
- context "with non-defaults" do
+ context 'with non-defaults' do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'httpd' }
    let(:params) {{
@@ -72,7 +72,7 @@ describe( 'stunnel::tun', :type => :define ) do
    end
  end
 
- context "with multipule socket options" do
+ context 'with multipule socket options' do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'httpd' }
    let(:params) {{
@@ -89,13 +89,13 @@ describe( 'stunnel::tun', :type => :define ) do
                      },
      :timeoutidle => '4000',
    }}
-   it "should contain multipule socket lines" do
+   it 'should contain multipule socket lines' do
        should contain_file('/etc/stunnel/conf.d/httpd.conf') \
            .with_content(/socket\ =\ l:SO_TIMEOUT=1\s+socket\ =\ r:SO_TIMEOUT=2/m)
    end
  end
 
- context "with multiple back-end servers" do
+ context 'with multiple back-end servers' do
    ['rr', 'prio'].each do |failover|
      describe "and failover set to \"#{failover}\"" do
        let(:facts) {{ 'osfamily' => 'RedHat' }}
@@ -121,7 +121,7 @@ describe( 'stunnel::tun', :type => :define ) do
    end
  end
 
- context "with an array of options" do
+ context 'with an array of options' do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'httpd' }
    let(:params) {{
@@ -138,13 +138,13 @@ describe( 'stunnel::tun', :type => :define ) do
                      },
      :timeoutidle => '4000',
    }}
-   it "should contain multiple options lines" do
+   it 'should contain multiple options lines' do
        should contain_file('/etc/stunnel/conf.d/httpd.conf') \
            .with_content(/options = NO_SSLv2$\s+options = NO_SSLv3$/m)
    end
  end
 
- context "with ensure = absent" do
+ context 'with ensure = absent' do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'mytunnel' }
    let(:params) {{
@@ -188,5 +188,5 @@ describe( 'stunnel::tun', :type => :define ) do
    end
  end
 
- context ""
+ context ''
 end
