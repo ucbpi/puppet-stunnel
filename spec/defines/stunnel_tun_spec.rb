@@ -22,6 +22,18 @@ describe( 'stunnel::tun', :type => :define ) do
        should contain_file('/etc/stunnel/conf.d/my-tunnel.conf').with_content(l)
      end
    end
+
+   it 'should contain a sysv init script' do
+     should contain_file('/etc/init.d/stunnel-my-tunnel').with_ensure('present')
+   end
+
+   it 'should contain a service which requires the init script' do
+     should contain_service('stunnel-my-tunnel').with({
+       'enable' => true,
+       'require' => 'File[/etc/init.d/stunnel-my-tunnel]',
+       'subscribe' => 'File[/etc/stunnel/conf.d/my-tunnel.conf]',
+     })
+   end
  end
 
  context "with non-defaults" do
