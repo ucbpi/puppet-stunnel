@@ -1,0 +1,15 @@
+[Unit]
+Description=Stunnel (<%= @name %>)
+Documentation=man:stunnel(8)
+After=syslog.target network.target
+
+[Service]
+Type=forking
+GuessMainPID=no
+PIDFile=<%= @pid %>
+ExecStart=<%= @svc_bin %> <%= @config_file %>
+KillMode=process
+TimeoutStopSec=2
+
+[Install]
+WantedBy=multi-user.target
