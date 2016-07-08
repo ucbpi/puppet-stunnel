@@ -159,5 +159,28 @@ describe( 'stunnel::tun', :type => :define ) do
      it { should contain_service('stunnel-mytunnel').that_comes_before('File[/etc/init.d/stunnel-mytunnel]') }
  end
 
+ context 'with service_init_system = systemd' do
+   let(:facts) {{ 'osfamily' => 'RedHat' }}
+   let(:title) { 'mytunnel' }
+   let(:params) {{
+     :accept => '1234',
+     :connect => '2345',
+     :install_service => 'true',
+     :service_init_system => 'systemd',
+   }}
+
+   it 'should contain a systemd service unit config' do
+     should contain_file('/etc/systemd/system/stunnel-mytunnel.service').with_ensure('present')
+   end
+
+   it 'should contain a service which requires the service unit config' do
+     should contain_service('stunnel-mytunnel').with({
+       'enable' => true,
+       'require' => 'File[/etc/systemd/system/stunnel-mytunnel.service]',
+       'subscribe' => 'File[/etc/stunnel/conf.d/mytunnel.conf]',
+     })
+   end
+ end
+
  context ""
 end
