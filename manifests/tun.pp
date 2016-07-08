@@ -67,6 +67,7 @@ define stunnel::tun (
   $debug = '5',
   $install_service = true,
   $service_ensure = 'running',
+  $service_init_system = 'sysv',
   $output = 'UNSET',
   $global_opts = { },
   $service_opts = { },
@@ -138,13 +139,24 @@ define stunnel::tun (
   } else {
     $initscript_ensure = 'absent'
   }
-  $initscript_file = "/etc/init.d/stunnel-${name}"
-  file { $initscript_file:
-    ensure  => $initscript_ensure,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0550',
-    content => template('stunnel/stunnel.init.erb'),
+  if $service_init_system == 'sysv' {
+    $initscript_file = "/etc/init.d/stunnel-${name}"
+    file { $initscript_file:
+      ensure  => $initscript_ensure,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0550',
+      content => template('stunnel/stunnel.init.erb'),
+    }
+  } elsif $service_init_system == 'systemd' {
+    $initscript_file = "/etc/systemd/system/stunnel-${name}.service"
+    file { $initscript_file:
+      ensure  => $initscript_ensure,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+      content => template('stunnel/stunnel.init.systemd.erb'),
+    }
   }
   if $install_service or $ensure == 'absent' {
     if $ensure == 'absent' {
