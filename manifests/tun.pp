@@ -141,7 +141,7 @@ define stunnel::tun (
     owner   => 'root',
     group   => 'root',
     mode    => '0444',
-    content => template("${template}"),
+    content => template($template),
   }
 
   # setup our init script / service
@@ -163,9 +163,9 @@ define stunnel::tun (
     $initscript_file = "/etc/systemd/system/stunnel-${name}.service"
     file { $initscript_file:
       ensure  => $initscript_ensure,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
       content => template('stunnel/stunnel.init.systemd.erb'),
     }
   }
