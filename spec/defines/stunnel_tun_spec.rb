@@ -53,12 +53,6 @@ describe( 'stunnel::tun', :type => :define ) do
      :timeoutidle => '4000',
    }}
    it do
-     should contain_service('stunnel-httpd').with({
-       'enable' => true,
-       'require' => 'File[/etc/init.d/stunnel-httpd]',
-       'subscribe' => 'File[/etc/stunnel/conf.d/httpd.conf]',
-     })
-
      lines = [
        /accept=987/,
        /connect=localhost:789/,
