@@ -138,7 +138,8 @@ define stunnel::tun (
   } else {
     $initscript_ensure = 'absent'
   }
-  file { "/etc/init.d/stunnel-${name}":
+  $initscript_file = "/etc/init.d/stunnel-${name}"
+  file { $initscript_file:
     ensure  => $initscript_ensure,
     owner   => 'root',
     group   => 'root',
@@ -152,13 +153,13 @@ define stunnel::tun (
       # When removing, the init file should be removed after the service is
       # stopped
       $service_require = undef
-      $service_before = File["/etc/init.d/stunnel-${name}"]
+      $service_before = File[$initscript_file]
     } else {
       $service_ensure_real = $service_ensure
       $service_enable = true
       # When installing, the init file should be created before the service is
       # started
-      $service_require = File["/etc/init.d/stunnel-${name}"]
+      $service_require = File[$initscript_file]
       $service_before = undef
     }
     service { "stunnel-${name}":
