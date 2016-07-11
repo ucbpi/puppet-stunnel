@@ -16,6 +16,13 @@ class stunnel::data {
       $log_dir = '/var/log/stunnel'
       $setgid = 'root'
       $setuid = 'root'
+
+      if ($::operatingsystem == 'RedHat' and versioncmp($::operatingsystemrelease, '7.0') >= 0) or
+         ($::operatingsystem == 'CentOS' and versioncmp($::operatingsystemrelease, '7.14.04') >= 0) {
+        $service_init_system = 'systemd'
+      } else {
+        $service_init_system = 'sysv'
+      }
     }
     /Debian/: {
       $package = [ 'stunnel4', 'lsb-base' ]
@@ -29,6 +36,13 @@ class stunnel::data {
       $log_dir = '/var/log/stunnel4'
       $setgid = 'root'
       $setuid = 'root'
+
+      if ($::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '15.04') >= 0) or
+         ($::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '8.0') >= 0) {
+        $service_init_system = 'systemd'
+      } else {
+        $service_init_system = 'sysv'
+      }
     }
 
     default: {
