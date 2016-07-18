@@ -289,6 +289,18 @@ This attribute controls the installation of the init-script for this tunnel. If
 set to true, the init script will be installed. If set to false, the init-script
 will be removed.
 
+### service\_init\_system ###
+
+Specify which init system will be managing the service. If set to 'sysv' then
+a sysvinit style initscript for each tunnel will be placed inside of
+/etc/init.d/stunnel-\<name\>. If set to 'systemd' then a systemd service unit
+config will be placed in /etc/systemd/system/stunnel-\<name\>.service.
+
+    service_init_system => 'sysv',
+    service_init_system => 'systemd',
+
+This attribute is optional and defaults to `sysv`.
+
 ### options ###
 
 Specify any options that you want to pass to OpenSSL.

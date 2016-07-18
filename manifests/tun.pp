@@ -54,6 +54,15 @@
 #   whether to set up or remove this tunnel. Valid values are 'absent' and
 #   'present'. Defaults to 'present'.
 #
+# [*install_service*]
+#   Whether or not to install an init script for this tunnel (boolean).
+#   Defaults to true
+#
+# [*service_init_system*]
+#   Which init system will be managing this service. Valid values are 'sysv'
+#   and 'systemd'.
+#   Defaults to 'sysv'
+#
 define stunnel::tun (
   $accept,
   $connect,
@@ -67,6 +76,7 @@ define stunnel::tun (
   $debug = '5',
   $install_service = true,
   $service_ensure = 'running',
+  $service_init_system = 'UNSET',
   $output = 'UNSET',
   $global_opts = { },
   $service_opts = { },
@@ -113,6 +123,13 @@ define stunnel::tun (
     fail('$options must be an array, or a string containing a single option')
   }
 
+  $service_init_system_real = $service_init_system ? {
+    'UNSET' => $::stunnel::data::service_init_system,
+    default => $service_init_system,
+  }
+  validate_re( $service_init_system_real, '^(sysv|systemd)$',
+    '$service_init_system must be either \'sysv\' or \'systemd\'')
+
   $pid = "${stunnel::data::pid_dir}/stunnel-${name}.pid"
   $output_r = $output ? {
     'UNSET' => "${::stunnel::data::log_dir}/${name}.log",
@@ -129,7 +146,7 @@ define stunnel::tun (
     owner   => 'root',
     group   => 'root',
     mode    => '0444',
-    content => template("${template}"),
+    content => template($template),
   }
 
   # setup our init script / service
@@ -138,12 +155,24 @@ define stunnel::tun (
   } else {
     $initscript_ensure = 'absent'
   }
-  file { "/etc/init.d/stunnel-${name}":
-    ensure  => $initscript_ensure,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0550',
-    content => template('stunnel/stunnel.init.erb'),
+  if $service_init_system_real == 'sysv' {
+    $initscript_file = "/etc/init.d/stunnel-${name}"
+    file { $initscript_file:
+      ensure  => $initscript_ensure,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0550',
+      content => template('stunnel/stunnel.init.erb'),
+    }
+  } elsif $service_init_system_real == 'systemd' {
+    $initscript_file = "/etc/systemd/system/stunnel-${name}.service"
+    file { $initscript_file:
+      ensure  => $initscript_ensure,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template('stunnel/stunnel.init.systemd.erb'),
+    }
   }
   if $install_service or $ensure == 'absent' {
     if $ensure == 'absent' {
@@ -152,13 +181,13 @@ define stunnel::tun (
       # When removing, the init file should be removed after the service is
       # stopped
       $service_require = undef
-      $service_before = File["/etc/init.d/stunnel-${name}"]
+      $service_before = File[$initscript_file]
     } else {
       $service_ensure_real = $service_ensure
       $service_enable = true
       # When installing, the init file should be created before the service is
       # started
-      $service_require = File["/etc/init.d/stunnel-${name}"]
+      $service_require = File[$initscript_file]
       $service_before = undef
     }
     service { "stunnel-${name}":

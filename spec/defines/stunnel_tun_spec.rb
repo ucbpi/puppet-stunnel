@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe( 'stunnel::tun', :type => :define ) do
- context "with a basic tunnel" do
+ context 'with a basic tunnel' do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'my-tunnel' }
    let(:params) {{
-     'accept' => '1234',
-     'connect' => '2345',
+     :accept => '1234',
+     :connect => '2345',
    }}
    it do
      lines = [
@@ -22,18 +22,30 @@ describe( 'stunnel::tun', :type => :define ) do
        should contain_file('/etc/stunnel/conf.d/my-tunnel.conf').with_content(l)
      end
    end
+
+   it 'should contain a sysv init script' do
+     should contain_file('/etc/init.d/stunnel-my-tunnel').with_ensure('present')
+   end
+
+   it 'should contain a service which requires the init script' do
+     should contain_service('stunnel-my-tunnel').with({
+       :enable => true,
+       :require => 'File[/etc/init.d/stunnel-my-tunnel]',
+       :subscribe => 'File[/etc/stunnel/conf.d/my-tunnel.conf]',
+     })
+   end
  end
 
- context "with non-defaults" do
+ context 'with non-defaults' do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'httpd' }
    let(:params) {{
-     'accept' => '987',
-     'connect' => 'localhost:789',
-     'cert' => '/etc/pki/tls/cert/my-public.crt',
+     :accept => '987',
+     :connect => 'localhost:789',
+     :cert => '/etc/pki/tls/cert/my-public.crt',
      :cafile => '/etc/pki/tls/certs/ca-bundle.crt',
-     'options' => 'NO_SSLv2',
-     'install_service' => 'true',
+     :options => 'NO_SSLv2',
+     :install_service => 'true',
      :output => '/var/log/stunnel/httpd-stunnel.log',
      :debug => '1',
      :service_opts => { 'TIMEOUTbusy' => '600' },
@@ -41,12 +53,6 @@ describe( 'stunnel::tun', :type => :define ) do
      :timeoutidle => '4000',
    }}
    it do
-     should contain_service('stunnel-httpd').with({
-       'enable' => true,
-       'require' => 'File[/etc/init.d/stunnel-httpd]',
-       'subscribe' => 'File[/etc/stunnel/conf.d/httpd.conf]',
-     })
-
      lines = [
        /accept=987/,
        /connect=localhost:789/,
@@ -66,15 +72,15 @@ describe( 'stunnel::tun', :type => :define ) do
    end
  end
 
- context "with multipule socket options" do
+ context 'with multipule socket options' do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'httpd' }
    let(:params) {{
-     'accept' => '987',
-     'connect' => 'localhost:789',
-     'cert' => '/etc/pki/tls/cert/my-public.crt',
-     'options' => 'NO_SSLv2',
-     'install_service' => 'true',
+     :accept => '987',
+     :connect => 'localhost:789',
+     :cert => '/etc/pki/tls/cert/my-public.crt',
+     :options => 'NO_SSLv2',
+     :install_service => 'true',
      :output => '/var/log/stunnel/httpd-stunnel.log',
      :debug => '1',
      :service_opts => { 'TIMEOUTbusy' => '600' },
@@ -83,13 +89,13 @@ describe( 'stunnel::tun', :type => :define ) do
                      },
      :timeoutidle => '4000',
    }}
-   it "should contain multipule socket lines" do
+   it 'should contain multipule socket lines' do
        should contain_file('/etc/stunnel/conf.d/httpd.conf') \
            .with_content(/socket\ =\ l:SO_TIMEOUT=1\s+socket\ =\ r:SO_TIMEOUT=2/m)
    end
  end
 
- context "with multiple back-end servers" do
+ context 'with multiple back-end servers' do
    ['rr', 'prio'].each do |failover|
      describe "and failover set to \"#{failover}\"" do
        let(:facts) {{ 'osfamily' => 'RedHat' }}
@@ -115,15 +121,15 @@ describe( 'stunnel::tun', :type => :define ) do
    end
  end
 
- context "with an array of options" do
+ context 'with an array of options' do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'httpd' }
    let(:params) {{
-     'accept' => '987',
-     'connect' => 'localhost:789',
-     'cert' => '/etc/pki/tls/cert/my-public.crt',
-     'options' => ['NO_SSLv2','NO_SSLv3'],
-     'install_service' => 'true',
+     :accept => '987',
+     :connect => 'localhost:789',
+     :cert => '/etc/pki/tls/cert/my-public.crt',
+     :options => ['NO_SSLv2','NO_SSLv3'],
+     :install_service => 'true',
      :output => '/var/log/stunnel/httpd-stunnel.log',
      :debug => '1',
      :service_opts => { 'TIMEOUTbusy' => '600' },
@@ -132,13 +138,13 @@ describe( 'stunnel::tun', :type => :define ) do
                      },
      :timeoutidle => '4000',
    }}
-   it "should contain multiple options lines" do
+   it 'should contain multiple options lines' do
        should contain_file('/etc/stunnel/conf.d/httpd.conf') \
            .with_content(/options = NO_SSLv2$\s+options = NO_SSLv3$/m)
    end
  end
 
- context "with ensure = absent" do
+ context 'with ensure = absent' do
    let(:facts) {{ 'osfamily' => 'RedHat' }}
    let(:title) { 'mytunnel' }
    let(:params) {{
@@ -159,5 +165,28 @@ describe( 'stunnel::tun', :type => :define ) do
      it { should contain_service('stunnel-mytunnel').that_comes_before('File[/etc/init.d/stunnel-mytunnel]') }
  end
 
- context ""
+ context 'with service_init_system = systemd' do
+   let(:facts) {{ 'osfamily' => 'RedHat' }}
+   let(:title) { 'mytunnel' }
+   let(:params) {{
+     :accept => '1234',
+     :connect => '2345',
+     :install_service => 'true',
+     :service_init_system => 'systemd',
+   }}
+
+   it 'should contain a systemd service unit config' do
+     should contain_file('/etc/systemd/system/stunnel-mytunnel.service').with_ensure('present')
+   end
+
+   it 'should contain a service which requires the service unit config' do
+     should contain_service('stunnel-mytunnel').with({
+       :enable => true,
+       :require => 'File[/etc/systemd/system/stunnel-mytunnel.service]',
+       :subscribe => 'File[/etc/stunnel/conf.d/mytunnel.conf]',
+     })
+   end
+ end
+
+ context ''
 end
