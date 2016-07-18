@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
 if ENV.key?('PUPPET_VERSION')
-  puppetversion = "#{ENV['PUPPET_VERSION']}"
+   puppetversion = "#{ENV['PUPPET_VERSION']}"
  else
-   puppetversion = "~> 2.7.0"
+   puppetversion = "~> 3.8.0"
 end
 
 # pin rake to this version for as long as we need to test against
@@ -16,3 +16,7 @@ gem 'puppetlabs_spec_helper'
 # pin rspec to < 3.0.0 until rspec-puppet supports rspec > 3.0.0
 # https://github.com/rodjek/rspec-puppet/issues/200
 gem 'rspec', '~> 2.0'
+
+if RUBY_VERSION == '1.8.7'
+  gem 'json_pure', "1.8.3"
+end
