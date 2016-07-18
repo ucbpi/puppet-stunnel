@@ -31,13 +31,18 @@ define stunnel::cert (
     }
   }
 
+  package { 'ruby':
+    ensure => 'installed',
+  }
+
   exec { "stunnel-generate-cert-${name}":
     path    => [ '/usr/bin', '/bin' ],
     command => "${bin} -c ${comps} -o ${out} -f",
     onlyif  => "${bin} -c ${comps} -o ${out} -t; test $? -eq 1",
     require => [
       File['/usr/local/bin/stunnel-combine-certs'],
-      File[$stunnel::data::cert_dir]
+      File[$stunnel::data::cert_dir],
+      Package['ruby'],
     ]
   }
 }
