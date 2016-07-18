@@ -17,8 +17,7 @@ class stunnel::data {
       $setgid = 'root'
       $setuid = 'root'
 
-      if ($::operatingsystem == 'RedHat' and versioncmp($::operatingsystemrelease, '7.0') >= 0) or
-         ($::operatingsystem == 'CentOS' and versioncmp($::operatingsystemrelease, '7.14.04') >= 0) {
+      if versioncmp($::operatingsystemmajrelease, '7') >= 0) {
         $service_init_system = 'systemd'
       } else {
         $service_init_system = 'sysv'
