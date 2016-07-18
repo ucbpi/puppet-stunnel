@@ -17,7 +17,7 @@ class stunnel::data {
       $setgid = 'root'
       $setuid = 'root'
 
-      if versioncmp($::operatingsystemmajrelease, '7') >= 0) {
+      if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
         $service_init_system = 'systemd'
       } else {
         $service_init_system = 'sysv'
