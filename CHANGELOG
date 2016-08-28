@@ -1,3 +1,6 @@
+2016-08-28 Aaron Russo <arusso@berkeley.edu> - 3.0.0
+* Support for RHEL/CentOS 7
+
 2016-04-08 Aaron Russo <arusso@berkeley.edu> - 2.2.0
 * stunnel::tun options parameter now handles an array for multiple options (mjs510)
 * support uninstalling stunnel::tun resources (mjs510)
