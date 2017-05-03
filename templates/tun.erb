@@ -1,12 +1,4 @@
 # This file managed by Puppet
-<% if @cert_real != '' -%>
-cert = <%= @cert_real %>
-<% end -%>
-<% if @cafile_real != '' -%>
-CAfile = <%= @cafile_real %>
-<% else -%>
-# CAfile = /path/to/cafile.crt
-<% end -%>
 
 setuid = root
 setgid = root
@@ -35,6 +27,17 @@ options = <%= option %>
 <%- end -%>
 
 [<%= @name %>]
+<% if @cert_real != '' -%>
+cert = <%= @cert_real %>
+<% end -%>
+<% if @cafile_real != '' -%>
+CAfile = <%= @cafile_real %>
+<% else -%>
+# CAfile = /path/to/cafile.crt
+<% end -%>
+<% if @key_real != '' -%>
+key = <%= @key_real %>
+<% end -%>
 <% if @accept -%>
   accept=<%= @accept %>
 <% end -%>
