@@ -35,6 +35,9 @@ CAfile = <%= @cafile_real %>
 <% else -%>
 # CAfile = /path/to/cafile.crt
 <% end -%>
+<% if @key_real != '' -%>
+key = <%= @key_real %>
+<% end -%>
 <% if @accept -%>
   accept=<%= @accept %>
 <% end -%>

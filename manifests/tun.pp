@@ -13,6 +13,9 @@
 # [*cert*]
 #   Certificate to use for this tunnel
 #
+# [*key*]
+#   Key to use for this tunnel
+#
 # [*client*]
 #   Whether this tunnel should be setup in client mode.
 #
@@ -68,6 +71,7 @@ define stunnel::tun (
   $connect,
   $cafile = '',
   $cert = 'UNSET',
+  $key = '',
   $client = false,
   $options = [ ],
   $failover = 'rr',
@@ -95,6 +99,11 @@ define stunnel::tun (
     default => $cafile,
   }
 
+  $key_real = $key ? {
+    'UNSET' => '',
+    default => $key,
+  }
+
   # Clients don't require a certificate but servers do
   if $client {
     $cert_default = ''
@@ -112,6 +121,9 @@ define stunnel::tun (
   }
   if $cert_real != '' {
     validate_absolute_path( $cert_real )
+  }
+  if $key_real != '' {
+    validate_absolute_path( $key_real )
   }
   validate_bool( str2bool($client) )
 
