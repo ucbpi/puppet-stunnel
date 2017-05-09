@@ -29,7 +29,7 @@ class stunnel::data {
       $bin_name = 'stunnel4'
       $bin_path = '/usr/bin'
       $config_dir = '/etc/stunnel'
-      $pid_dir = '/var/run'
+      $pid_dir = '/var/run/stunnel4'
       $conf_d_dir = '/etc/stunnel/conf.d'
       $cert_dir = '/etc/stunnel/certs'
       $log_dir = '/var/log/stunnel4'
