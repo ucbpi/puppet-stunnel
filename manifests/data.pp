@@ -33,8 +33,8 @@ class stunnel::data {
       $conf_d_dir = '/etc/stunnel/conf.d'
       $cert_dir = '/etc/stunnel/certs'
       $log_dir = '/var/log/stunnel4'
-      $setgid = 'root'
-      $setuid = 'root'
+      $setgid = 'stunnel4'
+      $setuid = 'stunnel4'
 
       if ($::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '15.04') >= 0) or
          ($::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '8.0') >= 0) {
