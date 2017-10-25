@@ -2,7 +2,9 @@
 #
 # STunnel Management
 #
-class stunnel {
+class stunnel (
+  $tunnels = {},
+) {
   file { '/usr/local/bin/stunnel-combine-certs':
     ensure => 'present',
     owner  => 'root',
@@ -13,4 +15,9 @@ class stunnel {
 
   include stunnel::install, stunnel::config
   Class['Stunnel::Install'] -> Class['Stunnel::Config']
+
+  if $tunnels {
+    validate_hash($tunnels)
+    ensure_resources('stunnel::tun', $tunnels)
+  }
 }
