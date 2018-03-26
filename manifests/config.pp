@@ -7,7 +7,6 @@ class stunnel::config {
   $stunnel_dirs = [
     $stunnel::data::config_dir,
     $stunnel::data::conf_d_dir,
-    $stunnel::data::log_dir,
   ]
 
   file { $stunnel_dirs:
@@ -15,5 +14,12 @@ class stunnel::config {
     owner  => 'root',
     group  => 'root',
     mode   => '0555',
+  }
+
+  file { $stunnel::data::log_dir:
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }
 }
